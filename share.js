@@ -3,7 +3,7 @@
 const SHARE_DATA = {
   title: 'LearnDocs Hub - 100+ Free Online Tools',
   description: 'Free AI Chat + 100+ tools for PDF, Image, Video, Audio & more. 100% private - no uploads!',
-  url: 'https://all-in-one-online-document-toolkit-five.vercel.app/'
+  url: 'https://learn-doshub.vercel.app'
 };
 
 function getShareText(toolName) {
