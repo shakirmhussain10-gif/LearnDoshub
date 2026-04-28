@@ -1,0 +1,24 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://learndocs-hub.com/sitemap.xml
+
+# Disallow admin pages
+Disallow: /admin.html
+Disallow: /firebase-admin.html
+Disallow: /edit-links.html
+Disallow: /set-links.html
+Disallow: /test-affiliate.html
+Disallow: /app-icons.html
+
+# Allow all tools
+Allow: /pdf-tools.html
+Allow: /image-tools.html
+Allow: /text-tools.html
+Allow: /audio-tools.html
+Allow: /video-tools.html
+Allow: /business-tools.html
+Allow: /social-tools.html
+Allow: /calculators.html
+Allow: /chat.html
+Allow: /test-paper-generator.html

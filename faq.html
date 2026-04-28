@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>FAQ - LearnDocs Hub | Free Online Tools & AI Chat</title>
+  <meta name="description" content="Frequently Asked Questions about LearnDocs Hub. Learn how to use 100+ free PDF, Image, Text, Audio, Video tools and free AI Chat assistant.">
+  <meta name="keywords" content="FAQ, LearnDocs Hub, free tools, PDF tools, AI chat, how to use, help">
+  <link rel="canonical" href="https://learndocs-hub.com/faq.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Schema.org structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "name": "Frequently Asked Questions",
+    "description": "FAQ about LearnDocs Hub free online tools and AI Chat.",
+    "url": "https://learndocs-hub.com/faq.html"
+  }
+  </script>
+
+  <style>
+    [data-theme="dark"] {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-tertiary: #334155;
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --border: #334155;
+      --accent: #6366f1;
+      --accent-hover: #818cf8;
+      --shadow: 0 4px 24px rgba(0,0,0,0.3);
+    }
+    [data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-tertiary: #e2e8f0;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      --border: #e2e8f0;
+      --accent: #4f46e5;
+      --accent-hover: #6366f1;
+      --shadow: 0 4px 24px rgba(0,0,0,0.06);
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    a { text-decoration: none; color: inherit; }
+    
+    /* Navbar */
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      padding: 0 24px; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-brand {
+      font-size: 1.1rem; font-weight: 700;
+      background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .nav-links { display: flex; gap: 16px; }
+    .nav-links a {
+      padding: 8px 14px; border-radius: 8px;
+      color: var(--text-secondary); font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+    .nav-links a:hover { color: var(--text-primary); background: var(--bg-tertiary); }
+    .nav-toggle { display: none; background: none; border: none; cursor: pointer; color: var(--text-primary); padding: 8px; }
+    .nav-toggle svg { width: 24px; height: 24px; }
+    
+    /* Main Content */
+    .main-content {
+      padding: 100px 24px 60px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .page-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .page-header h1 {
+      font-size: 2.5rem; font-weight: 800; margin-bottom: 12px;
+    }
+    .page-header p {
+      color: var(--text-secondary); font-size: 1.1rem;
+    }
+    
+    /* FAQ Item */
+    .faq-section { margin-bottom: 32px; }
+    .faq-section h2 {
+      font-size: 1.3rem; margin-bottom: 16px;
+      color: var(--accent);
+    }
+    .faq-item {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 16px;
+      overflow: hidden;
+      transition: border-color 0.3s;
+    }
+    .faq-item:hover { border-color: var(--accent); }
+    .faq-question {
+      padding: 20px 24px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600; font-size: 1.05rem;
+      transition: background 0.2s;
+    }
+    .faq-question:hover { background: var(--bg-tertiary); }
+    .faq-question::after {
+      content: '+';
+      font-size: 1.5rem;
+      color: var(--accent);
+      transition: transform 0.3s;
+      flex-shrink: 0;
+      margin-left: 16px;
+    }
+    .faq-item.open .faq-question::after {
+      transform: rotate(45deg);
+    }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+    }
+    .faq-item.open .faq-answer {
+      max-height: 500px;
+      padding: 0 24px 20px;
+    }
+    .faq-answer p {
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+    .faq-answer ul {
+      margin: 12px 0 12px 20px;
+      color: var(--text-secondary);
+    }
+    .faq-answer li { margin-bottom: 8px; }
+    
+    /* Contact Section */
+    .contact-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+      margin-top: 48px;
+    }
+    .contact-section h3 {
+      font-size: 1.3rem; margin-bottom: 12px;
+    }
+    .contact-section p {
+      color: var(--text-secondary); margin-bottom: 20px;
+    }
+    .contact-btn {
+      display: inline-block;
+      padding: 12px 28px;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+    .contact-btn:hover { background: var(--accent-hover); }
+    
+    /* Footer */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 24px;
+      text-align: center;
+      color: var(--text-muted);
+      margin-top: 60px;
+    }
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .footer-links a {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+    .footer-links a:hover { color: var(--accent); }
+    
+    /* Mobile */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-toggle { display: block; }
+      .main-content { padding: 80px 16px 40px; }
+      .page-header h1 { font-size: 1.8rem; }
+      .faq-question { padding: 16px; font-size: 1rem; }
+      .faq-item.open .faq-answer { padding: 0 16px 16px; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="nav-brand">LearnDocs Hub</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="pdf-tools.html">PDF Tools</a>
+      <a href="image-tools.html">Images</a>
+      <a href="chat.html">AI Chat</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </div>
+    <button class="nav-toggle" onclick="toggleNav()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 12h18M3 6h18M3 18h18"/>
+      </svg>
+    </button>
+  </nav>
+
+  <main class="main-content">
+    <div class="page-header">
+      <h1>Frequently Asked Questions</h1>
+      <p>Find answers to common questions about LearnDocs Hub</p>
+    </div>
+
+    <!-- General -->
+    <div class="faq-section">
+      <h2>General Questions</h2>
+      
+      <div class="faq-item">
+        <div class="faq-question">What is LearnDocs Hub?</div>
+        <div class="faq-answer">
+          <p>LearnDocs Hub is a free collection of 100+ online tools for working with PDFs, images, text, audio, video, and business documents. It also includes a free AI Chat assistant powered by Groq. All tools run entirely in your browser - your files never leave your device.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Is it really free? Are there any hidden charges?</div>
+        <div class="faq-answer">
+          <p>Yes, completely free! All 100+ tools are free to use with:</p>
+          <ul>
+            <li>No hidden charges or subscription fees</li>
+            <li>No watermarks on your files</li>
+            <li>No usage limits</li>
+            <li>No account creation required</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Do I need to install any software?</div>
+        <div class="faq-answer">
+          <p>No installation required! All tools work directly in your web browser. Just open the website and start using any tool immediately. Works on Chrome, Firefox, Safari, Edge, and other modern browsers.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Can I use LearnDocs Hub on mobile?</div>
+        <div class="faq-answer">
+          <p>Yes! The website is fully mobile-responsive and works on smartphones and tablets. Many tools also support camera input on mobile devices for scanning documents or capturing images.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Privacy & Security -->
+    <div class="faq-section">
+      <h2>Privacy & Security</h2>
+      
+      <div class="faq-item">
+        <div class="faq-question">Are my files uploaded to a server?</div>
+        <div class="faq-answer">
+          <p><strong>No!</strong> All file processing happens locally in your browser using JavaScript. Your files are never uploaded to any server. This makes our tools one of the most private options available online. Your data stays on your device.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Is my data safe?</div>
+        <div class="faq-answer">
+          <p>Absolutely. Since files are processed locally in your browser, there's no risk of your documents being stored or accessed by anyone else. We cannot see or access your files at all.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Do you track user activity?</div>
+        <div class="faq-answer">
+          <p>We use basic analytics to understand which tools are popular, but this is anonymized. We don't track personal information, and no file data is ever sent to our servers.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Chat -->
+    <div class="faq-section">
+      <h2>AI Chat Assistant</h2>
+      
+      <div class="faq-item">
+        <div class="faq-question">How does the AI Chat work?</div>
+        <div class="faq-answer">
+          <p>Our AI Chat is powered by Groq's LPU inference engine, providing fast and intelligent responses. You can ask questions, get help with writing, coding, analysis, homework help, and much more - completely free!</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Is the AI Chat free to use?</div>
+        <div class="faq-answer">
+          <p>Yes, the AI Chat is completely free with no limits. You can have unlimited conversations with the AI assistant at no cost.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">What can I ask the AI assistant?</div>
+        <div class="faq-answer">
+          <p>You can ask the AI to help with:</p>
+          <ul>
+            <li>Writing emails, essays, and documents</li>
+            <li>Programming and coding help</li>
+            <li>Math and science problems</li>
+            <li>Homework and study assistance</li>
+            <li>Creative writing and brainstorming</li>
+            <li>Data analysis and explanations</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tools & Usage -->
+    <div class="faq-section">
+      <h2>Tools & Usage</h2>
+      
+      <div class="faq-item">
+        <div class="faq-question">What types of tools are available?</div>
+        <div class="faq-answer">
+          <p>We offer 100+ tools across categories:</p>
+          <ul>
+            <li><strong>PDF Tools</strong> - merge, split, compress, convert, edit, annotate</li>
+            <li><strong>Image Tools</strong> - resize, crop, convert, compress, watermark</li>
+            <li><strong>Text Tools</strong> - QR generator, password generator, formatters</li>
+            <li><strong>Audio Tools</strong> - convert, trim, merge, extract audio</li>
+            <li><strong>Video Tools</strong> - compress, convert, trim, create GIFs</li>
+            <li><strong>Business Tools</strong> - invoices, resumes, signatures</li>
+            <li><strong>Calculators</strong> - age, BMI, unit conversion</li>
+            <li><strong>Social Media Tools</strong> - thumbnails, post creators</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">What file formats are supported?</div>
+        <div class="faq-answer">
+          <p>Different tools support different formats:</p>
+          <ul>
+            <li><strong>PDF tools:</strong> PDF, DOCX, XLSX, PPTX, and images</li>
+            <li><strong>Image tools:</strong> JPG, PNG, WebP, GIF, BMP, SVG</li>
+            <li><strong>Audio tools:</strong> MP3, WAV, OGG, AAC, FLAC</li>
+            <li><strong>Video tools:</strong> MP4, MOV, AVI, WebM, and more</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Is there a file size limit?</div>
+        <div class="faq-answer">
+          <p>Most tools work with files up to 50MB. Since files are processed in your browser, larger files may take longer to process depending on your device's capabilities.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">What happens if a tool doesn't work?</div>
+        <div class="faq-answer">
+          <p>Since all processing happens in your browser, some tools may have limitations based on browser support. For best results, use a modern browser like Chrome, Firefox, or Edge. If a tool isn't working, try:</p>
+          <ul>
+            <li>Refreshing the page</li>
+            <li>Clearing your browser cache</li>
+            <li>Trying a different browser</li>
+            <li>Checking if JavaScript is enabled</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">How do I use the Test Paper Generator?</div>
+        <div class="faq-answer">
+          <p>The Test Paper Generator lets you create custom test papers for classes 1-12. You can:</p>
+          <ul>
+            <li>Add your own questions (MCQs, short, long)</li>
+            <li>Generate random tests from question bank</li>
+            <li>Export as PDF</li>
+            <li>Save and load question banks</li>
+          </ul>
+          <p style="margin-top: 12px;"><a href="test-paper-generator.html" style="color: var(--accent);">Try Test Paper Generator →</a></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Technical -->
+    <div class="faq-section">
+      <h2>Technical Questions</h2>
+      
+      <div class="faq-item">
+        <div class="faq-question">Which browsers are supported?</div>
+        <div class="faq-answer">
+          <p>All tools work best in modern browsers:</p>
+          <ul>
+            <li><strong>Chrome</strong> (recommended)</li>
+            <li><strong>Firefox</strong></li>
+            <li><strong>Safari</strong></li>
+            <li><strong>Edge</strong></li>
+            <li><strong>Opera</strong></li>
+          </ul>
+          <p style="margin-top: 12px;">Some features require JavaScript to be enabled.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Do you offer API access?</div>
+        <div class="faq-answer">
+          <p>Currently, we don't offer API access. All tools are available through our web interface only. Check our blog or social media for future updates.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Can I use this offline?</div>
+        <div class="faq-answer">
+          <p>Yes! Once the page loads, many tools will work offline thanks to our service worker. However, features like AI Chat require an internet connection to function.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">How do I enable dark mode?</div>
+        <div class="faq-answer">
+          <p>Click on the Settings link in the navigation bar. You can choose between:</p>
+          <ul>
+            <li><strong>Dark Mode</strong> - Easy on the eyes</li>
+            <li><strong>Light Mode</strong> - Classic bright theme</li>
+            <li><strong>System</strong> - Follows your device settings</li>
+          </ul>
+          <p style="margin-top: 12px;"><a href="settings.html" style="color: var(--accent);">Open Settings →</a></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact -->
+    <div class="contact-section">
+      <h3>Still have questions?</h3>
+      <p>If you couldn't find the answer you're looking for, feel free to contact us.</p>
+      <a href="contact.html" class="contact-btn">Contact Us</a>
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="contact.html">Contact</a>
+    </div>
+    <p>&copy; 2026 LearnDocs Hub. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // FAQ Toggle
+    document.querySelectorAll('.faq-question').forEach(question => {
+      question.addEventListener('click', () => {
+        const item = question.parentElement;
+        item.classList.toggle('open');
+      });
+    });
+
+    // Load theme
+    const savedTheme = localStorage.getItem('eds-theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
+    // Mobile nav toggle
+    function toggleNav() {
+      const navLinks = document.querySelector('.nav-links');
+      navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+    }
+  </script>
+</body>
+</html>

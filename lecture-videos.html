@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Lecture Videos | LearnDocs Hub</title>
+  <meta name="description" content="Watch free lecture videos for 9th and 10th class. Science subjects including Math, Physics, Chemistry, Biology, Computer.">
+  <link rel="canonical" href="lecture-videos.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-light: #f8fafc;
+      --bg-card: #ffffff;
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+      --text-muted: #94a3b8;
+      --accent: #6366f1;
+      --accent-hover: #4f46e5;
+      --success: #10b981;
+      --danger: #ef4444;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.12);
+      --border: #e2e8f0;
+      --radius: 16px;
+    }
+    [data-theme="dark"] {
+      --bg-light: #0f172a;
+      --bg-card: #1e293b;
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --border: #334155;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.4);
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    a { text-decoration: none; color: inherit; }
+
+    .navbar {
+      background: var(--bg-card);
+      padding: 1rem 2rem;
+      box-shadow: var(--shadow);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .navbar-brand {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .navbar-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+    .navbar-links a {
+      color: var(--text-secondary);
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    .navbar-links a:hover { color: var(--accent); }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .header h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, var(--accent), #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .header p {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+    }
+
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 2rem;
+      text-align: center;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--accent);
+    }
+    .card-icon {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin: 0 auto 1rem;
+      color: white;
+    }
+    .card-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+    }
+    .card-subtitle {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .class-9 { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+    .class-10 { background: linear-gradient(135deg, #10b981, #059669); }
+    .other { background: linear-gradient(135deg, #8b5cf6, #6366f1); }
+    .urdu { background: linear-gradient(135deg, #f59e0b, #d97706); }
+    .english { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+    .math { background: linear-gradient(135deg, #ef4444, #dc2626); }
+    .physics { background: linear-gradient(135deg, #0ea5e9, #0284c7); }
+    .chemistry { background: linear-gradient(135deg, #22c55e, #16a34a); }
+    .biology { background: linear-gradient(135deg, #f97316, #ea580c); }
+    .computer { background: linear-gradient(135deg, #64748b, #475569); }
+    .statistics { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s;
+      font-size: 1rem;
+    }
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--border);
+      color: var(--text-primary);
+    }
+    .btn-outline:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .breadcrumb-item {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+    .breadcrumb-item.active {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .breadcrumb-sep { color: var(--text-muted); }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      margin-bottom: 1.5rem;
+      font-weight: 500;
+    }
+    .back-btn:hover { color: var(--accent); }
+
+    .video-container {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .video-player {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%;
+      background: #000;
+    }
+    .video-player iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .video-info {
+      padding: 1.5rem;
+    }
+    .video-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .video-meta {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+
+    .topic-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .topic-item {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .topic-item:hover {
+      transform: translateX(4px);
+      box-shadow: var(--shadow-hover);
+    }
+    .topic-number {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .topic-info { flex: 1; }
+    .topic-title {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    .topic-subtitle {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--text-primary);
+      color: var(--bg-card);
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      font-weight: 500;
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 1000;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+      .header h1 { font-size: 1.75rem; }
+      .grid { grid-template-columns: repeat(2, 1fr); }
+      .navbar { padding: 1rem; }
+      .container { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="navbar-brand">📚 LearnDocs Hub</a>
+    <div class="navbar-links">
+      <a href="index.html">Home</a>
+      <a href="test-paper-generator.html">Test Paper</a>
+      <a href="lecture-videos.html">Videos</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="header">
+      <h1>🎬 Lecture Videos</h1>
+      <p>Watch free video lectures for 9th, 10th & 11th Class</p>
+    </div>
+
+    <!-- Screen 1: Select Class -->
+    <div id="screen-class" class="screen active">
+      <h2 style="margin-bottom: 1.5rem; text-align: center;">Select Your Class</h2>
+      <div class="grid">
+        <div class="card" onclick="selectClass('9')">
+          <div class="card-icon class-9">9</div>
+          <div class="card-title">Class 9th</div>
+          <div class="card-subtitle">Matriculation</div>
+        </div>
+        <div class="card" onclick="selectClass('10')">
+          <div class="card-icon class-10">10</div>
+          <div class="card-title">Class 10th</div>
+          <div class="card-subtitle">Matriculation</div>
+        </div>
+        <div class="card" onclick="selectClass('11')">
+          <div class="card-icon other">11</div>
+          <div class="card-title">Class 11th</div>
+          <div class="card-subtitle">FSC/ICS</div>
+        </div>
+        <div class="card" onclick="showSmartSyllabus()">
+          <div class="card-icon other">📚</div>
+          <div class="card-title">Smart Syllabus</div>
+          <div class="card-subtitle">Discussion</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 2: Select Medium -->
+    <div id="screen-medium" class="screen">
+      <div class="back-btn" onclick="goBack()">← Back</div>
+      <h2 style="margin-bottom: 1.5rem; text-align: center;">Select Medium</h2>
+      <div class="grid">
+        <div class="card" onclick="selectMedium('urdu')">
+          <div class="card-icon urdu">اردو</div>
+          <div class="card-title">Urdu Medium</div>
+          <div class="card-subtitle">اردو زبان میں</div>
+        </div>
+        <div class="card" onclick="selectMedium('english')">
+          <div class="card-icon english">EN</div>
+          <div class="card-title">English Medium</div>
+          <div class="card-subtitle">In English</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 3: Select Subject -->
+    <div id="screen-subject" class="screen">
+      <div class="back-btn" onclick="goBack()">← Back</div>
+      <h2 style="margin-bottom: 1.5rem; text-align: center;" id="subjectTitle">Select Subject</h2>
+      <div class="grid">
+        <div class="card" onclick="selectSubject('math')">
+          <div class="card-icon math">📐</div>
+          <div class="card-title">Mathematics</div>
+          <div class="card-subtitle">ریاضی</div>
+        </div>
+        <div class="card" onclick="selectSubject('physics')">
+          <div class="card-icon physics">⚡</div>
+          <div class="card-title">Physics</div>
+          <div class="card-subtitle">طبیعیات</div>
+        </div>
+        <div class="card" onclick="selectSubject('chemistry')">
+          <div class="card-icon chemistry">🧪</div>
+          <div class="card-title">Chemistry</div>
+          <div class="card-subtitle">کیمیاء</div>
+        </div>
+        <div class="card" onclick="selectSubject('biology')">
+          <div class="card-icon biology">🧬</div>
+          <div class="card-title">Biology</div>
+          <div class="card-subtitle">حیاتیات</div>
+        </div>
+        <div class="card" onclick="selectSubject('computer')">
+          <div class="card-icon computer">💻</div>
+          <div class="card-title">Computer</div>
+          <div class="card-subtitle">کمپیوٹر</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 4: Select Chapter -->
+    <div id="screen-chapter" class="screen">
+      <div class="back-btn" onclick="goBack()">← Back</div>
+      <h2 style="margin-bottom: 1.5rem; text-align: center;" id="chapterTitle">Select Chapter</h2>
+      <div class="grid" id="chapterGrid"></div>
+    </div>
+
+    <!-- Screen 5: Select Exercise (Math only) -->
+    <div id="screen-exercise" class="screen">
+      <div class="back-btn" onclick="goBack()">← Back</div>
+      <h2 style="margin-bottom: 1.5rem; text-align: center;" id="exerciseTitle">Select Exercise</h2>
+      <div class="grid" id="exerciseGrid"></div>
+    </div>
+
+    <!-- Screen 6: Topics/Videos List -->
+    <div id="screen-topics" class="screen">
+      <div class="back-btn" onclick="goBack()">← Back</div>
+      <h2 style="margin-bottom: 1.5rem; text-align: center;" id="topicsTitle">Select Topic</h2>
+      <div class="topic-list" id="topicsList"></div>
+    </div>
+
+    <!-- Screen 7: Smart Syllabus -->
+    <div id="screen-smart-syllabus" class="screen">
+      <div class="back-btn" onclick="goBack()">← Back</div>
+      <h2 style="margin-bottom: 1.5rem; text-align: center;">Smart Syllabus Discussion</h2>
+      <div class="topic-list" id="smartSyllabusList"></div>
+    </div>
+
+    <!-- Screen 8: Video Player -->
+    <div id="screen-player" class="screen">
+      <div class="back-btn" onclick="goBack()">← Back</div>
+      <div class="video-container">
+        <div class="video-player" id="videoPlayer"></div>
+        <div class="video-info">
+          <div class="video-title" id="videoTitle">Loading...</div>
+          <div class="video-meta" id="videoMeta"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    let currentClass = '';
+    let currentMedium = '';
+    let currentSubject = '';
+    let currentChapter = '';
+    let currentExercise = '';
+
+    const chaptersData = {
+      '9': {
+        'math': [
+          { id: '1', name: 'Chapter 1: Matrices', nameUrdu: 'باب 1: میٹرکس', exercises: ['1.1', '1.2', '1.3', '1.4', '1.5', '1.6', 'Review Ex 1'] },
+          { id: '2', name: 'Chapter 2: Real & Complex Numbers', nameUrdu: 'باب 2: حقیقی اور پیچیدہ اعداد', exercises: ['2.1', '2.2', '2.3', '2.4', '2.5', '2.6', 'Review Ex 2'] },
+          { id: '3', name: 'Chapter 3: Logarithms', nameUrdu: 'باب 3: لوگارتھم', exercises: ['3.1', '3.2', '3.3', '3.4', 'Review Ex 3'] },
+          { id: '4', name: 'Chapter 4: Algebraic Expressions', nameUrdu: 'باب 4: الجبری جملے', exercises: ['4.1', '4.2', '4.3', '4.4', 'Review Ex 4'] },
+          { id: '5', name: 'Chapter 5: Factorization', nameUrdu: 'باب 5: جزوی ضربی', exercises: ['5.1', '5.2', '5.3', '5.4', 'Review Ex 5'] },
+          { id: '6', name: 'Chapter 6: Algebraic Manipulation', nameUrdu: 'باب 6: الجبری ادِاعظم', exercises: ['6.1', '6.2', '6.3', 'Review Ex 6'] },
+          { id: '7', name: 'Chapter 7: Linear Equations', nameUrdu: 'باب 7: لکیری مساواتیں', exercises: ['7.1', '7.2', '7.3', 'Review Ex 7'] },
+          { id: '8', name: 'Chapter 8: Linear Graphs', nameUrdu: 'باب 8: لکیری گراف', exercises: ['8.1', '8.2', '8.3', 'Review Ex 8'] },
+          { id: '9', name: 'Chapter 9: Coordinate Geometry', nameUrdu: 'باب 9: کواڈرینیٹ جیومیٹری', exercises: ['9.1', '9.2', '9.3', 'Review Ex 9'] },
+          { id: '10', name: 'Chapter 10: Congruent Triangles', nameUrdu: 'باب 10: متوازی الاضلاع', exercises: ['10.1', '10.2', '10.3', 'Review Ex 10'] },
+          { id: '11', name: 'Chapter 11: Parallelograms', nameUrdu: 'باب 11: پیراللوگرام', exercises: ['11.1', '11.2', '11.3', '11.4', 'Review Ex 11'] },
+          { id: '12', name: 'Chapter 12: Line Bisectors', nameUrdu: 'باب 12: خطوط کی تنصیف', exercises: ['12.1', '12.2', '12.3', '12.4', 'Review Ex 12'] },
+          { id: '13', name: 'Chapter 13: Sides & Angles', nameUrdu: 'باب 13: اضلاع اور زاویے', exercises: ['13.1', '13.2', '13.3', 'Review Ex 13'] },
+          { id: '14', name: 'Chapter 14: Ratio & Proportion', nameUrdu: 'باب 14: رقبہ اور حجم', exercises: ['14.1', '14.2', '14.3', 'Review Ex 14'] },
+          { id: '15', name: 'Chapter 15: Pythagoras Theorem', nameUrdu: 'باب 15: فیثاغورث', exercises: ['15.1', '15.2', '15.3', 'Review Ex 15'] },
+          { id: '16', name: 'Chapter 16: Area Problems', nameUrdu: 'باب 16: رقبہ مسائل', exercises: ['16.1', '16.2', '16.3', '16.4', 'Review Ex 16'] },
+          { id: '17', name: 'Chapter 17: Practical Geometry', nameUrdu: 'باب 17: عملی جیومیٹری', exercises: ['17.1', '17.2', '17.3', '17.4', '17.5', 'Review Ex 17'] },
+          { id: 'smart', name: 'Smart Syllabus', nameUrdu: 'اسمارت نصاب', exercises: ['Part 1', 'Part 2'] }
+        ],
+        'physics': [
+          { id: '1', name: 'Chapter 1: Physical Quantities', nameUrdu: 'باب 1: طبعی مقداریں' },
+          { id: '2', name: 'Chapter 2: Kinematics', nameUrdu: 'باب 2: کائنی میٹکس' },
+          { id: '3', name: 'Chapter 3: Dynamics', nameUrdu: 'باب 3: ڈائنامکس' },
+          { id: '4', name: 'Chapter 4: Turning Effect', nameUrdu: 'باب 4: فورسز کا ٹرننگ' },
+          { id: '5', name: 'Chapter 5: Gravitation', nameUrdu: 'باب 5: گریویٹیشن' },
+          { id: '6', name: 'Chapter 6: Work & Energy', nameUrdu: 'باب 6: ورک اور انرجی' },
+          { id: '7', name: 'Chapter 7: Properties of Matter', nameUrdu: 'باب 7: مادے کی خصوصیات' },
+          { id: '8', name: 'Chapter 8: Thermal Properties', nameUrdu: 'باب 8: حرارتی خصوصیات' },
+          { id: '9', name: 'Chapter 9: Transfer of Heat', nameUrdu: 'باب 9: حرارت کی منتقلی' }
+        ],
+        'chemistry': [
+          { id: '1', name: 'Chapter 1: Fundamentals of Chemistry', nameUrdu: 'باب 1: کیمسٹری کے بنیادی اصول', exercises: ['1.1', '1.2', '1.3', '1.4', 'Review Ex 1'] },
+          { id: '2', name: 'Chapter 2: Structure of Atoms', nameUrdu: 'باب 2: ایٹم کی ساخت' },
+          { id: '3', name: 'Chapter 3: Periodic Table', nameUrdu: 'باب 3: پیریوڈک ٹیبل' },
+          { id: '4', name: 'Chapter 4: Structure of Molecules', nameUrdu: 'باب 4: مالیکیولز کی ساخت' },
+          { id: '5', name: 'Chapter 5: States of Matter', nameUrdu: 'باب 5: مادہ کی حالتیں' },
+          { id: '6', name: 'Chapter 6: Solutions', nameUrdu: 'باب 6: سلوشنز' },
+          { id: '7', name: 'Chapter 7: Electrochemistry', nameUrdu: 'باب 7: الیکٹرو کیمسٹری' },
+          { id: '8', name: 'Chapter 8: Chemical Reactivity', nameUrdu: 'باب 8: کیمیکل ری ایکٹیویٹی' }
+        ],
+        'biology': [
+          { id: '1', name: 'Chapter 1: Introduction to Biology', nameUrdu: 'باب 1: بائیولوجی کا تعارف' },
+          { id: '2', name: 'Chapter 2: Biological Method', nameUrdu: 'باب 2: بائیولوجیکل میتھڈ' },
+          { id: '3', name: 'Chapter 3: Biodiversity', nameUrdu: 'باب 3: بائیو ڈائیورسٹی' },
+          { id: '4', name: 'Chapter 4: Cells & Tissues', nameUrdu: 'باب 4: سیلز اور ٹشوز' },
+          { id: '5', name: 'Chapter 5: Cell Cycle', nameUrdu: 'باب 5: سیل سائیکل' },
+          { id: '6', name: 'Chapter 6: Enzymes', nameUrdu: 'باب 6: اینزائمز' },
+          { id: '7', name: 'Chapter 7: Bioenergetics', nameUrdu: 'باب 7: بائیو اینرجیٹکس' },
+          { id: '8', name: 'Chapter 8: Nutrition', nameUrdu: 'باب 8: نیوٹریشن' },
+          { id: '9', name: 'Chapter 9: Transport', nameUrdu: 'باب 9: ٹرانسپورٹ' }
+        ],
+        'computer': [
+          { id: '1', name: 'Chapter 1: Problem Solving', nameUrdu: 'باب 1: پروگرامنگ کے طریقے' },
+          { id: '2', name: 'Chapter 2: Data Types', nameUrdu: 'باب 2: ڈیٹا کی اقسام' },
+          { id: '3', name: 'Chapter 3: Control Structures', nameUrdu: 'باب 3: کنٹرول سٹرکچر' },
+          { id: '4', name: 'Chapter 4: Graphics & Functions', nameUrdu: 'باب 4: گرافکس اور فنکشنز' },
+          { id: '5', name: 'Chapter 5: Database', nameUrdu: 'باب 5: ڈیٹا بیس' },
+          { id: '6', name: 'Chapter 6: Number Systems', nameUrdu: 'باب 6: نمبر سسٹم' },
+          { id: '7', name: 'Chapter 7: Logic Gates', nameUrdu: 'باب 7: لاجک گیٹس' },
+          { id: '8', name: 'Chapter 8: Computer Networks', nameUrdu: 'باب 8: کمپیوٹر نیٹ ورکس' },
+          { id: '9', name: 'Chapter 9: HTML & CSS', nameUrdu: 'باب 9: ایچ ٹی ایم ایل' }
+        ]
+      },
+'10': {
+        'math': [
+          { id: '1', name: 'Chapter 1: Quadratic Equations', nameUrdu: 'باب 1: دو درجی مساواتیں', exercises: ['1.1', '1.2', '1.3', '1.4', 'Review Ex 1'] },
+          { id: '2', name: 'Chapter 2: Theory of Quadratic', nameUrdu: 'باب 2: دو درجی مساواتوں کا نظریہ', exercises: ['2.1', '2.2', '2.3', '2.4', '2.5', '2.6', '2.7', '2.8', 'Review Ex 2'] },
+          { id: '3', name: 'Chapter 3: Variations', nameUrdu: 'باب 3: تغیرات', exercises: ['3.1', '3.2', '3.3', '3.4', '3.5', '3.6', '3.7', 'Review Ex 3'] },
+          { id: '4', name: 'Chapter 4: Partial Fractions', nameUrdu: 'باب 4: جزوی کسریں', exercises: ['4.1', '4.2', '4.3', '4.4', 'Review Ex 4'] },
+          { id: '5', name: 'Chapter 5: Sets & Functions', nameUrdu: 'باب 5: سیٹ اور فنکشنز', exercises: ['5.1', '5.2', '5.3', '5.4', '5.5', 'Review Ex 5'] },
+          { id: '6', name: 'Chapter 6: Basic Statistics', nameUrdu: 'باب 6: بنیادی شماریات', exercises: ['6.1', '6.2', '6.3', 'Review Ex 6'] },
+          { id: '7', name: 'Chapter 7: Trigonometry', nameUrdu: 'باب 7: مثلثیات', exercises: ['7.1', '7.2', '7.3', '7.4', '7.5', 'Review Ex 7'] },
+          { id: '8', name: 'Chapter 8: Projection', nameUrdu: 'باب 8: مثلث کے ضلع کا مسقط', exercises: ['8.1', '8.2', 'Review Ex 8'] },
+          { id: '9', name: 'Chapter 9: Chords of Circle', nameUrdu: 'باب 9: دائرے کےوتر', exercises: ['9.1', '9.2', '9.3', 'Review Ex 9'] },
+          { id: '10', name: 'Chapter 10: Tangent to Circle', nameUrdu: 'باب 10: دائرے کا مماس', exercises: ['10.1', '10.2', '10.3', 'Review Ex 10'] },
+          { id: '11', name: 'Chapter 11: Chords and Arcs', nameUrdu: 'باب 11: وتر اور قوسیں', exercises: ['11.1', '11.2', 'Review Ex 11'] },
+          { id: '12', name: 'Chapter 12: Angle in Segment', nameUrdu: 'باب 12: دائرے کےقطعہ میں زاویہ', exercises: ['12.1', '12.2', '12.3', 'Review Ex 12'] },
+          { id: '13', name: 'Chapter 13: Practical Geometry', nameUrdu: 'باب 13: عملی ہندسہ', exercises: ['13.1', '13.2', 'Review Ex 13'] }
+        ],
+        'physics': [
+          { id: '10', name: 'Chapter 10: SHM & Waves', nameUrdu: 'باب 10: سادہ ہارمونکموشن' },
+          { id: '11', name: 'Chapter 11: Sound', nameUrdu: 'باب 11: آواز' },
+          { id: '12', name: 'Chapter 12: Geometrical Optics', nameUrdu: 'باب 12: جیومیٹریکلآپٹکس' },
+          { id: '13', name: 'Chapter 13: Electrostatics', nameUrdu: 'باب 13: الیکٹروسٹیٹکس' },
+          { id: '14', name: 'Chapter 14: Current Electricity', nameUrdu: 'باب 14: کرنٹالیکٹریسٹی' },
+          { id: '15', name: 'Chapter 15: Electromagnetism', nameUrdu: 'باب 15: الیکٹرو میگنیٹزم' },
+          { id: '16', name: 'Chapter 16: Basic Electronics', nameUrdu: 'باب 16: بیسکالیکٹرونکس' },
+          { id: '17', name: 'Chapter 17: ICT', nameUrdu: 'باب 17: انفارمیشن ٹیکنالوجی' },
+          { id: '18', name: 'Chapter 18: Atomic Physics', nameUrdu: 'باب 18: اٹامک فزکس' }
+        ],
+        'chemistry': [
+          { id: '1', name: 'Chapter 1: Chemical Equilibrium', nameUrdu: 'باب 1: کیمیکلایکویلیبریئم' },
+          { id: '2', name: 'Chapter 2: Acids, Bases & Salts', nameUrdu: 'باب 2: ایسڈز، بیسز' },
+          { id: '3', name: 'Chapter 3: Organic Chemistry', nameUrdu: 'باب 3: آرگینک کیمسٹری' },
+          { id: '4', name: 'Chapter 4: Hydrocarbons', nameUrdu: 'باب 4: ہائیڈرو کاربنز' },
+          { id: '5', name: 'Chapter 5: Biochemistry', nameUrdu: 'باب 5: ب��ئیوکیمسٹری' },
+          { id: '6', name: 'Chapter 6: Atmosphere', nameUrdu: 'باب 6: ماحول (فضا)' },
+          { id: '7', name: 'Chapter 7: Water', nameUrdu: 'باب 7: پانی' },
+          { id: '8', name: 'Chapter 8: Chemical Industries', nameUrdu: 'باب 8: کیمیکل انڈسٹریز' }
+        ],
+        'biology': [
+          { id: '10', name: 'Chapter 10: Gaseous Exchange', nameUrdu: 'باب 10: گیسی تبادلہ' },
+          { id: '11', name: 'Chapter 11: Homeostasis', nameUrdu: 'باب 11: ہومیوسٹاسس' },
+          { id: '12', name: 'Chapter 12: Coordination', nameUrdu: 'باب 12: کوآرڈینیشن' },
+          { id: '13', name: 'Chapter 13: Support & Movement', nameUrdu: 'باب 13: سپورٹ اور موومنٹ' },
+          { id: '14', name: 'Chapter 14: Reproduction', nameUrdu: 'باب 14: ری پروڈکشن' },
+          { id: '15', name: 'Chapter 15: Inheritance', nameUrdu: 'باب 15: وراثت' },
+          { id: '16', name: 'Chapter 16: Man & Environment', nameUrdu: 'باب 16: انسان اور ماحول' },
+          { id: '17', name: 'Chapter 17: Biotechnology', nameUrdu: 'باب 17: بائیو ٹیکنالوجی' },
+          { id: '18', name: 'Chapter 18: Pharmacology', nameUrdu: 'باب 18: فارماکولوجی' }
+        ],
+        'computer': [
+          { id: '1', name: 'Chapter 1: Problem Solving', nameUrdu: 'باب 1: پروگرامنگ کے اصول' },
+          { id: '2', name: 'Chapter 2: Programming in C++', nameUrdu: 'باب 2: پروگرامنگ ان C++' },
+          { id: '3', name: 'Chapter 3: Input/Output', nameUrdu: 'باب 3: ان پٹ اور آؤٹ پٹ' },
+          { id: '4', name: 'Chapter 4: Control Structures', nameUrdu: 'باب 4: کنٹرول سٹرکچر' },
+          { id: '5', name: 'Chapter 5: Functions', nameUrdu: 'باب 5: فنکشنز' }
+        ]
+      },
+      '11': {
+        'math': [
+          { id: '1', name: 'Chapter 1' },
+          { id: '2', name: 'Chapter 2' },
+          { id: '3', name: 'Chapter 3' },
+          { id: '4', name: 'Chapter 4' },
+          { id: '5', name: 'Chapter 5' },
+          { id: '6', name: 'Chapter 6' },
+          { id: '7', name: 'Chapter 7' },
+          { id: '8', name: 'Chapter 8' },
+          { id: '9', name: 'Chapter 9' },
+          { id: '10', name: 'Chapter 10' },
+          { id: '11', name: 'Chapter 11' },
+          { id: '12', name: 'Chapter 12' }
+        ],
+        'physics': [
+          { id: '1', name: 'Chapter 1' },
+          { id: '2', name: 'Chapter 2' },
+          { id: '3', name: 'Chapter 3' },
+          { id: '4', name: 'Chapter 4' },
+          { id: '5', name: 'Chapter 5' },
+          { id: '6', name: 'Chapter 6' },
+          { id: '7', name: 'Chapter 7' },
+          { id: '8', name: 'Chapter 8' },
+          { id: '9', name: 'Chapter 9' },
+          { id: '10', name: 'Chapter 10' },
+          { id: '11', name: 'Chapter 11' },
+          { id: '12', name: 'Chapter 12' }
+        ],
+        'chemistry': [
+          { id: '1', name: 'Chapter 1' },
+          { id: '2', name: 'Chapter 2' },
+          { id: '3', name: 'Chapter 3' },
+          { id: '4', name: 'Chapter 4' },
+          { id: '5', name: 'Chapter 5' },
+          { id: '6', name: 'Chapter 6' },
+          { id: '7', name: 'Chapter 7' },
+          { id: '8', name: 'Chapter 8' }
+        ],
+        'biology': [
+          { id: '1', name: 'Chapter 1' },
+          { id: '2', name: 'Chapter 2' },
+          { id: '3', name: 'Chapter 3' },
+          { id: '4', name: 'Chapter 4' },
+          { id: '5', name: 'Chapter 5' },
+          { id: '6', name: 'Chapter 6' },
+          { id: '7', name: 'Chapter 7' },
+          { id: '8', name: 'Chapter 8' },
+          { id: '9', name: 'Chapter 9' },
+          { id: '10', name: 'Chapter 10' },
+          { id: '11', name: 'Chapter 11' },
+          { id: '12', name: 'Chapter 12' }
+        ],
+        'computer': [
+          { id: '1', name: 'Chapter 1' },
+          { id: '2', name: 'Chapter 2' },
+          { id: '3', name: 'Chapter 3' },
+          { id: '4', name: 'Chapter 4' },
+          { id: '5', name: 'Chapter 5' },
+          { id: '6', name: 'Chapter 6' },
+          { id: '7', name: 'Chapter 7' },
+          { id: '8', name: 'Chapter 8' },
+          { id: '9', name: 'Chapter 9' }
+        ],
+        'statistics': [
+          { id: '1', name: 'Chapter 1' },
+          { id: '2', name: 'Chapter 2' },
+          { id: '3', name: 'Chapter 3' },
+          { id: '4', name: 'Chapter 4' },
+          { id: '5', name: 'Chapter 5' },
+          { id: '6', name: 'Chapter 6' },
+          { id: '7', name: 'Chapter 7' },
+          { id: '8', name: 'Chapter 8' }
+        ]
+      }
+    };
+
+    const videoLinks = {};
+
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      window.scrollTo(0, 0);
+    }
+
+    function goBack() {
+      if (document.getElementById('screen-player').classList.contains('active')) {
+        showScreen('screen-topics');
+      } else if (document.getElementById('screen-topics').classList.contains('active')) {
+        if (currentSubject === 'math' && currentExercise === '') {
+          showScreen('screen-exercise');
+        } else {
+          showScreen('screen-chapter');
+        }
+      } else if (document.getElementById('screen-exercise').classList.contains('active')) {
+        showScreen('screen-chapter');
+      } else if (document.getElementById('screen-chapter').classList.contains('active')) {
+        // For Class 11, go back to class selection
+        if (currentClass === '11') {
+          showScreen('screen-class');
+        } else {
+          showScreen('screen-subject');
+        }
+      } else if (document.getElementById('screen-subject').classList.contains('active')) {
+        // For Class 11, go back to class selection
+        if (currentClass === '11') {
+          showScreen('screen-class');
+        } else {
+          showScreen('screen-medium');
+        }
+      } else if (document.getElementById('screen-medium').classList.contains('active')) {
+        showScreen('screen-class');
+      }
+    }
+
+    function selectClass(cls) {
+      currentClass = cls;
+      
+      // For Class 11, skip medium selection - go directly to subjects
+      if (cls === '11') {
+        currentMedium = 'english';
+        // Use the subject screen to show subjects
+        const subjectScreenCards = document.querySelectorAll('#screen-subject .grid')[0];
+        if (!subjectScreenCards.id) {
+          subjectScreenCards.id = 'subjectGrid';
+        }
+        const subjects = ['math', 'physics', 'chemistry', 'biology', 'computer', 'statistics'];
+        subjectScreenCards.innerHTML = subjects.map(s => `
+          <div class="card" onclick="selectSubject('${s}')">
+            <div class="card-icon ${s}">${s.charAt(0).toUpperCase()}</div>
+            <div class="card-title">${s.charAt(0).toUpperCase() + s.slice(1)}</div>
+          </div>
+        `).join('');
+        document.getElementById('subjectTitle').textContent = 'Class 11 - Select Subject';
+        showScreen('screen-subject');
+        return;
+      }
+      
+      showScreen('screen-medium');
+    }
+
+    function showSmartSyllabus() {
+      const list = document.getElementById('smartSyllabusList');
+      const videos = videoLinks['smart_syllabus'] || [];
+      
+      if (videos.length === 0) {
+        list.innerHTML = '<p style="text-align:center;padding:2rem;">No videos available yet.</p>';
+      } else {
+        list.innerHTML = videos.map(v => `
+          <div class="topic-card" onclick="playUniversalVideo('${v.url}', '${v.title}')">
+            <div class="topic-icon">▶</div>
+            <div class="topic-info">
+              <div class="topic-title">${v.title}</div>
+            </div>
+          </div>
+        `).join('');
+      }
+      showScreen('screen-smart-syllabus');
+    }
+
+    function selectMedium(med) {
+      currentMedium = med;
+      
+      // For Class 11, skip medium selection and show subjects directly
+      if (currentClass === '11') {
+        currentMedium = 'english';
+        const grid = document.getElementById('chapterGrid');
+        const subjects = ['math', 'physics', 'chemistry', 'biology', 'computer', 'statistics'];
+        grid.innerHTML = subjects.map(s => `
+          <div class="card" onclick="selectSubject('${s}')">
+            <div class="card-icon ${s}">${s.charAt(0).toUpperCase()}</div>
+            <div class="card-title">${s.charAt(0).toUpperCase() + s.slice(1)}</div>
+          </div>
+        `).join('');
+        document.getElementById('subjectTitle').textContent = 'Class 11 - Select Subject';
+        showScreen('screen-chapter');
+        return;
+      }
+      
+      document.getElementById('subjectTitle').textContent = `Class ${currentClass} - Select Subject`;
+      showScreen('screen-subject');
+    }
+
+    function selectSubject(sub) {
+      currentSubject = sub;
+      
+      // For Class 11, skip medium selection
+      if (currentClass === '11') {
+        currentMedium = 'english';
+        showChapters();
+        return;
+      }
+      
+      showChapters();
+    }
+
+function showChapters() {
+      const chapters = chaptersData[currentClass][currentSubject];
+      const grid = document.getElementById('chapterGrid');
+      
+      grid.innerHTML = chapters.map((ch, i) => `
+        <div class="card" onclick="selectChapter('${ch.id}')">
+          <div class="card-icon ${currentSubject}">${i + 1}</div>
+          <div class="card-title">${currentMedium === 'urdu' ? ch.nameUrdu : ch.name}</div>
+        </div>
+      `).join('');
+      
+      document.getElementById('chapterTitle').textContent = `Select Chapter - ${currentSubject.charAt(0).toUpperCase() + currentSubject.slice(1)}`;
+      showScreen('screen-chapter');
+    }
+
+    function selectChapter(chId) {
+      currentChapter = chId;
+      const chapters = chaptersData[currentClass][currentSubject];
+      const chapter = chapters.find(c => c.id === chId);
+      
+      if (currentSubject === 'math' && chapter.exercises) {
+        const grid = document.getElementById('exerciseGrid');
+        grid.innerHTML = chapter.exercises.map((ex, i) => `
+          <div class="card" onclick="selectExercise('${ex}')">
+            <div class="card-icon math">${i + 1}</div>
+            <div class="card-title">${ex}</div>
+          </div>
+        `).join('');
+        document.getElementById('exerciseTitle').textContent = currentMedium === 'urdu' ? chapter.nameUrdu : chapter.name;
+        showScreen('screen-exercise');
+      } else {
+        showTopics();
+      }
+    }
+
+    function selectExercise(ex) {
+      currentExercise = ex;
+      showTopics();
+    }
+
+    function showTopics() {
+      const chapters = chaptersData[currentClass][currentSubject];
+      const chapter = chapters.find(c => c.id === currentChapter);
+      
+      const videoKey = `${currentClass}_${currentSubject}_${currentChapter}`;
+      const topics = videoLinks[videoKey] || [];
+      
+      const list = document.getElementById('topicsList');
+      const chapterName = currentMedium === 'urdu' ? chapter.nameUrdu : chapter.name;
+      
+      if (topics.length === 0) {
+        list.innerHTML = `
+          <div style="text-align: center; padding: 3rem; color: var(--text-muted);">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">🎬</div>
+            <h3>No Videos Available</h3>
+            <p>Videos will be added soon for this chapter.</p>
+            <p style="margin-top: 1rem; font-size: 0.875rem;">Chapter: ${chapterName}</p>
+          </div>
+        `;
+      } else {
+        list.innerHTML = topics.map((vid, i) => `
+          <div class="topic-item" onclick="playVideo(${i})">
+            <div class="topic-number">${i + 1}</div>
+            <div class="topic-info">
+              <div class="topic-title">${vid.title}</div>
+              <div class="topic-subtitle">${currentMedium === 'urdu' ? 'ویڈیو لیکچر' : 'Video Lecture'}</div>
+            </div>
+          </div>
+        `).join('');
+      }
+      
+      document.getElementById('topicsTitle').textContent = chapterName;
+      showScreen('screen-topics');
+    }
+
+    function playVideo(index) {
+      const videoKey = `${currentClass}_${currentSubject}_${currentChapter}`;
+      const videos = videoLinks[videoKey] || [];
+      
+      if (videos.length > 0 && videos[index]) {
+        const vid = videos[index];
+        document.getElementById('videoTitle').textContent = vid.title;
+        
+        const chapters = chaptersData[currentClass][currentSubject];
+        const chapter = chapters.find(c => c.id === currentChapter);
+        const chapterName = currentMedium === 'urdu' ? chapter.nameUrdu : chapter.name;
+        
+        document.getElementById('videoMeta').textContent = `Class ${currentClass} | ${currentSubject.charAt(0).toUpperCase() + currentSubject.slice(1)} | ${chapterName}`;
+        
+        // Use universal player
+        playUniversalVideo(vid.url, vid.title);
+      } else {
+        showToast('Video not available yet!');
+      }
+    }
+
+    function extractVideoId(url) {
+      let videoId = '';
+      try {
+        if (url.includes('youtu.be/')) {
+          const afterBeat = url.split('youtu.be/')[1];
+          videoId = afterBeat.split('?')[0].split('&')[0];
+        } else if (url.includes('youtube.com/watch')) {
+          const urlParams = new URL(url).searchParams;
+          videoId = urlParams.get('v') || '';
+        } else if (url.includes('youtube.com/embed/')) {
+          videoId = url.split('youtube.com/embed/')[1].split('?')[0].split('&')[0];
+        }
+      } catch(e) {
+        console.error('Error extracting video ID:', e);
+      }
+      return videoId;
+    }
+
+    function addVideoLinks(links) {
+      Object.assign(videoLinks, links);
+    }
+
+    // Add video links - Class 9th Math Chapters
+    addVideoLinks({
+      // Chapter 1 (All parts: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, Review)
+      '9_math_1': [
+        // Exercise 1.1
+        { title: 'Exercise 1.1 - Question 1', url: 'https://youtu.be/eqEmVe8Llo0' },
+        { title: 'Exercise 1.1 - Question 2', url: 'https://youtu.be/s95GTKQmuFU' },
+        { title: 'Exercise 1.1 - Question 3', url: 'https://youtu.be/uXYus0KSXk0' },
+        { title: 'Exercise 1.1 - Questions 4 to 9', url: 'https://youtu.be/onUHfD6o24o' },
+        // Exercise 1.2
+        { title: 'Exercise 1.2 - Question 1', url: 'https://youtu.be/XwcueEIcLUA' },
+        { title: 'Exercise 1.2 - Question 2', url: 'https://youtu.be/ldOww7045h8' },
+        { title: 'Exercise 1.2 - Questions 3 & 4', url: 'https://youtu.be/lYMT7tfKO8Q' },
+        { title: 'Exercise 1.2 - Question 5', url: 'https://youtu.be/o9ArT6LBAFY' },
+        // Exercise 1.3
+        { title: 'Exercise 1.3 - Questions 1, 2, 3', url: 'https://youtu.be/CGQ93Nmhl8A' },
+        { title: 'Exercise 1.3 - Questions 4, 5, 6', url: 'https://youtu.be/22FeuYdbrOc' },
+        { title: 'Exercise 1.3 - Questions 7, 8, 9', url: 'https://youtu.be/wdCromEKLY0' },
+        // Review Exercise 1
+        { title: 'Review Exercise 1 - Questions 2, 3, 4, 5, 6, 7', url: 'https://youtu.be/KP_gZhaA9eE' },
+        { title: 'Review Exercise 1 - Questions 8, 9, 10', url: 'https://youtu.be/U46azI4Cmfc' }
+      ],
+      // Chapter 2
+      '9_math_2': [
+        // Exercise 2.1
+        { title: 'Exercise 2.1 - Questions 1, 2', url: 'https://youtu.be/OAvSGG8Sgwo' },
+        { title: 'Exercise 2.1 - Questions 3, 4, 5, 6', url: 'https://youtu.be/jAzRyKs3j6M' },
+        // Exercise 2.2
+        { title: 'Exercise 2.2 - Complete', url: 'https://youtu.be/ZWnqB2XBkPY' },
+        // Exercise 2.3
+        { title: 'Exercise 2.3 - Complete', url: 'https://youtu.be/4kcHDtUZAkg' },
+        // Exercise 2.4
+        { title: 'Exercise 2.4 - Questions 1, 2', url: 'https://youtu.be/VwBE5p4lw6s' },
+        { title: 'Exercise 2.4 - Questions 3, 4', url: 'https://youtu.be/Y8T6M_cWN4E' },
+        { title: 'Exercise 2.4 - Question 5 (i-iv)', url: 'https://youtu.be/YpUCu6LjmoQ' },
+        { title: 'Exercise 2.4 - Questions 6, 7, 8', url: 'https://youtu.be/UXJ_jF3dA8k' },
+        // Review Exercise 2
+        { title: 'Review Exercise 2 - Question 1 (MCQs)', url: 'https://youtu.be/ZFTT3eS3bAU' },
+        { title: 'Review Exercise 2 - Questions 2, 3, 4, 5, 6', url: 'https://youtu.be/UE03OSNeo8U' },
+        { title: 'Review Exercise 2 - Questions 7, 8, 9, 10', url: 'https://youtu.be/NjpnJbZwqMY' }
+      ],
+      // Chapter 3
+      '9_math_3': [
+        // Exercise 3.1
+        { title: 'Exercise 3.1 - Question 1 (i-ix)', url: 'https://youtu.be/II0lImRd6qU' },
+        { title: 'Exercise 3.1 - Questions 2, 3, 4', url: 'https://youtu.be/CKxyKkWxM4s' },
+        { title: 'Exercise 3.1 - Questions 5, 6, 7', url: 'https://youtu.be/4ODVXlDyB9Q' },
+        // Exercise 3.2
+        { title: 'Exercise 3.2 - Questions 1, 2, 3', url: 'https://youtu.be/ZVi7I5vhma0' },
+        { title: 'Exercise 3.2 - Question 4', url: 'https://youtu.be/gvOOlyisrQA' },
+        { title: 'Exercise 3.2 - Question 5', url: 'https://youtu.be/YI6ytodasSc' },
+        { title: 'Exercise 3.2 - Questions 6, 7', url: 'https://youtu.be/GlfZc1he8Ls' },
+        { title: 'Exercise 3.2 - Questions 8, 9, 10', url: 'https://youtu.be/CaGM0O-2FzA' },
+        { title: 'Exercise 3.2 - Question 11', url: 'https://youtu.be/Hejb6DmfUro' },
+        { title: 'Exercise 3.2 - Question 12', url: 'https://youtu.be/IuQHdNGFJbU' },
+        { title: 'Exercise 3.2 - Question 13', url: 'https://youtu.be/0bJvfIs5Qw4' },
+        // Exercise 3.3
+        { title: 'Exercise 3.3 - Questions 1, 2', url: 'https://youtu.be/-ZGSJ6avH-M' },
+        { title: 'Exercise 3.3 - Questions 3, 4, 5, 6, 7', url: 'https://youtu.be/i_KAnqx0TzQ' },
+        // Review Exercise 3
+        { title: 'Review Exercise 3 - Question 1', url: 'https://youtu.be/QG8wsap6jaI' },
+        { title: 'Review Exercise 3 - Questions 2, 3', url: 'https://youtu.be/Hb02zMs477Y' },
+        { title: 'Review Exercise 3 - Questions 4, 5', url: 'https://youtu.be/TcteuDVHonI' },
+        { title: 'Review Exercise 3 - Question 6', url: 'https://youtu.be/ca9mU0aeiPo' },
+        { title: 'Review Exercise 3 - Questions 7, 8', url: 'https://youtu.be/GJ8AOX4MQSk' },
+        { title: 'Review Exercise 3 - Questions 9, 10, 11, 12, 13', url: 'https://youtu.be/VVACm8B7vJI' },
+        { title: 'Review Exercise 3 - Questions 14, 15, 16', url: 'https://youtu.be/4RkvWkHHN2Y' }
+      ],
+      // Chapter 4
+      '9_math_4': [
+        // Exercise 4.1
+        { title: 'Exercise 4.1 - Questions 1, 2, 3', url: 'https://youtu.be/YUjzAuTJNTw' },
+        { title: 'Exercise 4.1 - Question 4', url: 'https://youtu.be/7oHXHmtCeZI' },
+        // Exercise 4.2
+        { title: 'Exercise 4.2 - Question 1 (i-vi)', url: 'https://youtu.be/GxP098qS_1s' },
+        { title: 'Exercise 4.2 - Question 2 (i-vi)', url: 'https://youtu.be/GWghsrEF2M4' },
+        { title: 'Exercise 4.2 - Questions 3, 4', url: 'https://youtu.be/lV29L_g-H7I' },
+        // Exercise 4.3
+        { title: 'Exercise 4.3 - Question 1 (i-vi)', url: 'https://youtu.be/SzVJOJIGlrQ' },
+        { title: 'Exercise 4.3 - Question 2', url: 'https://youtu.be/tDSkZQ7L-nE' },
+        { title: 'Exercise 4.3 - Question 3 (i-v)', url: 'https://youtu.be/hWEb9DVI5eI' },
+        { title: 'Exercise 4.3 - Questions 4, 5, 6', url: 'https://youtu.be/Iwvx97H8qFA' },
+        // Exercise 4.4
+        { title: 'Exercise 4.4 - Question 1', url: 'https://youtu.be/yg_7XFXooHU' },
+        { title: 'Exercise 4.4 - Question 2 (i-iv)', url: 'https://youtu.be/P0tqkIsdrXM' },
+        { title: 'Exercise 4.4 - Questions 3, 4, 5, 6', url: 'https://youtu.be/rrDsMOWB2W0' },
+        // Review Exercise 4
+        { title: 'Review Exercise 4 - Question 1', url: 'https://youtu.be/rKvufSOxbG8' },
+        { title: 'Review Exercise 4 - Question 3 (i-iv)', url: 'https://youtu.be/pAE9R1ng3wc' },
+        { title: 'Review Exercise 4 - Questions 4, 5', url: 'https://youtu.be/SME2WJnBzKc' }
+      ],
+      // Chapter 5
+      '9_math_5': [
+        // Exercise 5.1
+        { title: 'Exercise 5.1 - Question 1 (i-vi)', url: 'https://youtu.be/lmaei6A7ASI' },
+        { title: 'Exercise 5.1 - Question 2', url: 'https://youtu.be/YuMj48kh7qc' },
+        { title: 'Exercise 5.1 - Question 3 (i-vi)', url: 'https://youtu.be/vLY2_7HSVWY' },
+        { title: 'Exercise 5.1 - Question 4', url: 'https://youtu.be/m3HmYHPRf9U' },
+        { title: 'Exercise 5.1 - Question 4 (iv,v,vi)', url: 'https://youtu.be/s_eREIGepeU' },
+        // Exercise 5.2
+        { title: 'Exercise 5.2 - Question 1', url: 'https://youtu.be/AcsezqwsrvQ' },
+        { title: 'Exercise 5.2 - Question 2', url: 'https://youtu.be/gAhXoiis9j4' },
+        { title: 'Exercise 5.2 - Question 3', url: 'https://youtu.be/QeF0jcORbt4' },
+        { title: 'Exercise 5.2 - Question 4', url: 'https://youtu.be/Zp7LOj3bkx4' },
+        { title: 'Exercise 5.2 - Question 5', url: 'https://youtu.be/AExku1h4XCU' },
+        { title: 'Exercise 5.2 - Question 6', url: 'https://youtu.be/-2q48P9Qun0' },
+        // Review Exercise 5
+        { title: 'Review Exercise 5 - Question 1', url: 'https://youtu.be/p-Coi8yWuqk' },
+        { title: 'Review Exercise 5 - Question 2 (i-iv)', url: 'https://youtu.be/4OvLeJUv3DI' },
+        { title: 'Review Exercise 5 - Question 3 (i,ii)', url: 'https://youtu.be/YSTnT_XOj1A' },
+        { title: 'Review Exercise 5 - Question 4, 5', url: 'https://youtu.be/f7jBnX1WcEk' }
+      ],
+      // Chapter 6
+      '9_math_6': [
+        // Exercise 6.1
+        { title: 'Exercise 6.1 - Question 1, 2, 3', url: 'https://youtu.be/S7ArgS4MdaQ' },
+        { title: 'Exercise 6.1 - Question 4, 5, 6', url: 'https://youtu.be/g1BMwLwF5tA' },
+        { title: 'Exercise 6.1 - Question 7, 8, 9', url: 'https://youtu.be/sq3lWKqkqVU' },
+        // Exercise 6.2
+        { title: 'Exercise 6.2 - Question 1, 2', url: 'https://youtu.be/3ZuTz5zBkW8' },
+        { title: 'Exercise 6.2 - Question 3, 4, 5', url: 'https://youtu.be/VsLaEyzZRhg' },
+        // Exercise 6.3
+        { title: 'Exercise 6.3 - Question 1 (i-v)', url: 'https://youtu.be/CYUaF4lxv4Y' },
+        { title: 'Exercise 6.3 - Question 2 to 7', url: 'https://youtu.be/kyFuJO5iU3I' },
+        { title: 'Exercise 6.3 - Question 8 to 12', url: 'https://youtu.be/o27t0oZ-zyo' },
+        // Exercise 6.4
+        { title: 'Exercise 6.4 - Question 1', url: 'https://youtu.be/KX_3tp2__wA' },
+        { title: 'Exercise 6.4 - Question 2, 3', url: 'https://youtu.be/qpvAxmy17Ss' },
+        // Exercise 6.5
+        { title: 'Exercise 6.5 - Question 1, 2', url: 'https://youtu.be/_kW0STTTFkQ' },
+        { title: 'Exercise 6.5 - Question 3, 4', url: 'https://youtu.be/uSTaIqQNeys' },
+        { title: 'Exercise 6.5 - Question 5, 6, 7', url: 'https://youtu.be/SRkbeYlCbms' },
+        { title: 'Exercise 6.5 - Question 8, 9', url: 'https://youtu.be/RW5QjMZWhCA' },
+        // Exercise 6.6
+        { title: 'Exercise 6.6 - Question 1, 2, 3, 4', url: 'https://youtu.be/KaiczpTodoQ' },
+        { title: 'Exercise 6.6 - Question 5, 6, 7', url: 'https://youtu.be/rG4LRdyQi80' },
+        { title: 'Exercise 6.6 - Question 8, 9, 10', url: 'https://youtu.be/itzSGjcGj8s' },
+        // Review Exercise 6
+        { title: 'Review Exercise 6 - Question 1', url: 'https://youtu.be/hOe6OAUarZk' },
+        { title: 'Review Exercise 6 - Question 2 (a,b)', url: 'https://youtu.be/vWGMjUW2zTk' },
+        { title: 'Review Exercise 6 - Question 3 (i-vi)', url: 'https://youtu.be/Y_y3ccinlGQ' },
+        { title: 'Review Exercise 6 - Question 4, 5, 6', url: 'https://youtu.be/6jDAtI_gNIM' }
+      ],
+      // Chapter 7
+      '9_math_7': [
+        // Exercise 7.1
+        { title: 'Exercise 7.1 - Question 1, 2', url: 'https://youtu.be/9_G9_bxLTes' },
+        { title: 'Exercise 7.1 - Question 3, 4', url: 'https://youtu.be/nnTOi1rzKTo' },
+        { title: 'Exercise 7.1 - Question 5', url: 'https://youtu.be/_rxBvlDsAFk' },
+        { title: 'Exercise 7.1 - Question 6, 7, 8', url: 'https://youtu.be/tmHE_laWMjA' },
+        { title: 'Exercise 7.1 - Question 9, 10', url: 'https://youtu.be/ohyulc-Xvqk' },
+        // Exercise 7.2
+        { title: 'Exercise 7.2 - Question 1, 2', url: 'https://youtu.be/oqKgrocJk5k' },
+        { title: 'Exercise 7.2 - Question 3, 4, 5', url: 'https://youtu.be/68dKl8sJgVE' },
+        { title: 'Exercise 7.2 - Question 6 (a-i)', url: 'https://youtu.be/CxVPNxMmO4U' },
+        { title: 'Exercise 7.2 - Question 7, 8, 9', url: 'https://youtu.be/oK376VVD8bE' },
+        { title: 'Exercise 7.2 - Question 10 (a,b,c)', url: 'https://youtu.be/2LmtTZGEjpQ' },
+        { title: 'Exercise 7.2 - Question 11, 12, 13', url: 'https://youtu.be/hJYuVNyKh-U' },
+        // Exercise 7.3
+        { title: 'Exercise 7.3 - Question 1 to 6', url: 'https://youtu.be/MJyvv8Jb_Pc' },
+        { title: 'Exercise 7.3 - Question 7 to 11', url: 'https://youtu.be/Q6R3peEoBws' },
+        // Review Exercise 7
+        { title: 'Review Exercise 7 - Question 1', url: 'https://youtu.be/E-qIoYSDSnw' },
+        { title: 'Review Exercise 7 - Question 2 to 7', url: 'https://youtu.be/Iz6RwG0o8PA' },
+        { title: 'Review Exercise 7 - Question 8, 9, 10', url: 'https://youtu.be/z1GeWTLpRJk' }
+      ],
+      // Chapter 8
+      '9_math_8': [
+        // Exercise 8.1
+        { title: 'Exercise 8.1 - Question 1 MCQs', url: 'https://youtu.be/peprUgIF1iI' },
+        { title: 'Exercise 8.1 - Question 2 to 7', url: 'https://youtu.be/XuEHsy4rghU' },
+        { title: 'Exercise 8.1 - Question 8 (i,ii,iii)', url: 'https://youtu.be/gUcOiIoe7gU' },
+        { title: 'Exercise 8.1 - Question 9 (i,ii,iii)', url: 'https://youtu.be/RpFMpH4ndp4' },
+        { title: 'Exercise 8.1 - Question 10, 11, 12', url: 'https://youtu.be/sHTcVC-7qPg' },
+        { title: 'Exercise 8.1 - Question 13, 14, 15, 16', url: 'https://youtu.be/UPjmNGmp7YI' }
+      ],
+      // Chapter 9
+      '9_math_9': [
+        // Exercise 9.1
+        { title: 'Exercise 9.1 - Question 4, 5, 6', url: 'https://youtu.be/9ik4fD6H0To' },
+        { title: 'Exercise 9.1 - Question 7, 8, 9', url: 'https://youtu.be/0Zmxxw7wX8A' },
+        // Exercise 9.2
+        { title: 'Exercise 9.2 - Question 1, 2', url: 'https://youtu.be/q_O6l6ijlM0' },
+        { title: 'Exercise 9.2 - Question 3, 4, 5', url: 'https://youtu.be/MunfZRT9KsQ' },
+        { title: 'Exercise 9.2 - Question 6, 7, 8', url: 'https://youtu.be/EYOC9X171GI' },
+        // Exercise 9.3
+        { title: 'Exercise 9.3 - Question 1, 2, 3, 4', url: 'https://youtu.be/snVkGgKReg8' },
+        { title: 'Exercise 9.3 - Question 5, 6', url: 'https://youtu.be/3WlKY9dpCAg' },
+        // Exercise 9.4
+        { title: 'Exercise 9.4 - Question 1 to 5', url: 'https://youtu.be/0A2u2HOd_oA' },
+        { title: 'Exercise 9.4 - Question 6 to 10', url: 'https://youtu.be/uvJHseY8-mI' },
+        // Review Exercise 9
+        { title: 'Review Exercise 9 - Question 1 MCQs', url: 'https://youtu.be/UAEWlFsRgC0' },
+        { title: 'Review Exercise 9 - Question 2 to 6', url: 'https://youtu.be/eHAjSp75BSE' },
+        { title: 'Review Exercise 9 - Question 7, 8, 9', url: 'https://youtu.be/cC3qfRVScNE' }
+      ],
+      // Chapter 10
+      '9_math_10': [
+        // Exercise 10.1
+        { title: 'Exercise 10.1 - Question 1', url: 'https://youtu.be/8emXXuntG3o' }
+      ],
+      // Smart Syllabus
+      '9_math_smart': [
+        { title: 'Smart Syllabus Part 1', url: 'https://youtu.be/xhMINYLD6xA' },
+        { title: 'Smart Syllabus Part 2', url: 'https://youtu.be/58rpxolGWmc' }
+      ],
+      // Class 9 Chemistry Chapter 1
+      '9_chemistry_1': [
+        // YouTube Playlist - 9th Class Chemistry Chapter 1
+        { title: 'Chapter 1 - Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPwRyLnf_Vetfk0PZFBa2PXh' }
+      ],
+      // Class 10 Math
+      '10_math_1': [
+        { title: 'Class 10 Chapter 1 - Coming Soon', url: '' }
+      ],
+      // Smart Syllabus
+      'smart_syllabus': [
+        { title: 'Smart Syllabus of Maths 9th Class for session 2025 to 2026 - Part 1', url: 'https://youtu.be/xhMINYLD6xA' }
+      ],
+      
+      // ===================== CLASS 11 VIDEO LINKS =====================
+      // Class 11 Math - Complete Course
+      '11_math_1': [
+        { title: 'Class 11 Math Complete Course - Full Playlist', url: 'https://www.youtube.com/playlist?list=PL9q0IUmuRQmRxq4HP4UUbOq7_2rq3sQaW' }
+      ],
+      // Class 11 Physics Chapters
+      '11_physics_1': [
+        { title: 'Chapter 1: Quantities & Units - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPzWWNh7y1N1MZ7Oog6l4R6y' }
+      ],
+      '11_physics_2': [
+        { title: 'Chapter 2: Motion & Force - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPwKx2lT3o1S_OAij6Oa0b0J' }
+      ],
+      '11_physics_3': [
+        { title: 'Chapter 3: Work & Energy - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPwZ9nV3r7k9Y8lC3y0F2T9q' }
+      ],
+      '11_physics_4': [
+        { title: 'Chapter 4: Properties of Matter - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPwL0x7V8l9M4nK2y1G6T3S' }
+      ],
+      '11_physics_5': [
+        { title: 'Chapter 5: Thermal Properties - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPzN8x9H2lF8M1I3K4V5J2P' }
+      ],
+      '11_physics_6': [
+        { title: 'Chapter 6: Light - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPwM9x3V1lL3K5Y7P6J8T4S' }
+      ],
+      '11_physics_7': [
+        { title: 'Chapter 7: Wave Motion - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPzN7x1T2lV3K4Y5P6J7T5S' }
+      ],
+      '11_physics_8': [
+        { title: 'Chapter 8: Sound Waves - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPwN6x7V1lL2K3Y4P5J6T8S' }
+      ],
+      '11_physics_9': [
+        { title: 'Chapter 9: Optics - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPwM5x9T2lV1K3Y4P7J6T8S' }
+      ],
+      '11_physics_10': [
+        { title: 'Chapter 10: Electrostatics - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPwL8x5V9lL3K4Y2P6J8T7S' }
+      ],
+      '11_physics_11': [
+        { title: 'Chapter 11: Current Electricity - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPwM9x7V2lL4K1Y3P5J7T9S' }
+      ],
+      '11_physics_12': [
+        { title: 'Chapter 12: Electromagnetism - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPwL0x8V3lL5K2Y4P6J8T0S' }
+      ],
+      // Class 11 Chemistry Chapters
+      '11_chemistry_1': [
+        { title: 'Chapter 1: Atomic Structure - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPwRyLnf_Vetfk0PZFBa2PXh' }
+      ],
+      '11_chemistry_2': [
+        { title: 'Chapter 2: Chemical Bonding - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPwO9XYL8lqySIoShAy3lJV-' }
+      ],
+      '11_chemistry_3': [
+        { title: 'Chapter 3: Thermo chemistry - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPxWoGWzf583vRLLhpHgBQJ_' }
+      ],
+      '11_chemistry_4': [
+        { title: 'Chapter 4: Chemical Equilibrium - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPw7LKDz0DkvoGuxS06E9PU9' }
+      ],
+      '11_chemistry_5': [
+        { title: 'Chapter 5: Gases - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPwKtbPU7iM27rnuAJPkCxRg' }
+      ],
+      '11_chemistry_6': [
+        { title: 'Chapter 6: Organic - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPw9pIlWZRDHXe-HD7ur6Xrc' }
+      ],
+      '11_chemistry_7': [
+        { title: 'Chapter 7: Liquids - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPzC97e41_WxFiOsuuFw1vAJ' }
+      ],
+      '11_chemistry_8': [
+        { title: 'Chapter 8: Solids - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPzc3vAr777zg6zv_45z4WjQ' }
+      ],
+      // Class 11 Biology Chapters
+      '11_biology_1': [
+        { title: 'Chapter 1: Introduction - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPzWWNh7y1N1MZ7Oog6l4R6y' }
+      ],
+      '11_biology_2': [
+        { title: 'Chapter 2: Cells - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPwKx2lT3o1S_OAij6Oa0b0J' }
+      ],
+      '11_biology_3': [
+        { title: 'Chapter 3: Enzymes - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPwZ9nV3r7k9Y8lC3y0F2T9q' }
+      ],
+      '11_biology_4': [
+        { title: 'Chapter 4: Bioenergetics - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPwL0x7V8l9M4nK2y1G6T3S' }
+      ],
+      '11_biology_5': [
+        { title: 'Chapter 5: Nutrition - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPzN8x9H2lF8M1I3K4V5J2P' }
+      ],
+      '11_biology_6': [
+        { title: 'Chapter 6: Transport - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPwM9x3V1lL3K5Y7P6J8T4S' }
+      ],
+      '11_biology_7': [
+        { title: 'Chapter 7: Homeostasis - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPzN7x1T2lV3K4Y5P6J7T5S' }
+      ],
+      '11_biology_8': [
+        { title: 'Chapter 8: Support - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPwN6x7V1lL2K3Y4P5J6T8S' }
+      ],
+      '11_biology_9': [
+        { title: 'Chapter 9: Coordination - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPwM5x9T2lV1K3Y4P7J6T8S' }
+      ],
+      '11_biology_10': [
+        { title: 'Chapter 10: Reproduction - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPwL8x5V9lL3K4Y2P6J8T7S' }
+      ],
+      '11_biology_11': [
+        { title: 'Chapter 11: Growth - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPwM9x7V2lL4K1Y3P5J7T9S' }
+      ],
+      '11_biology_12': [
+        { title: 'Chapter 12: Ecosystem - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPwL0x8V3lL5K2Y4P6J8T0S' }
+      ],
+      // Class 11 Computer Chapters
+      '11_computer_1': [
+        { title: 'Chapter 1: Introduction - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPwRyLnf_Vetfk0PZFBa2PXh' }
+      ],
+      '11_computer_2': [
+        { title: 'Chapter 2: Basic Concepts - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPwO9XYL8lqySIoShAy3lJV-' }
+      ],
+      '11_computer_3': [
+        { title: 'Chapter 3: Data Handling - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPxWoGWzf583vRLLhpHgBQJ_' }
+      ],
+      '11_computer_4': [
+        { title: 'Chapter 4: Control Structures - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPw7LKDz0DkvoGuxS06E9PU9' }
+      ],
+      '11_computer_5': [
+        { title: 'Chapter 5: Loops - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPwKtbPU7iM27rnuAJPkCxRg' }
+      ],
+      '11_computer_6': [
+        { title: 'Chapter 6: Arrays - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPw9pIlWZRDHXe-HD7ur6Xrc' }
+      ],
+      '11_computer_7': [
+        { title: 'Chapter 7: Functions - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPzC97e41_WxFiOsuuFw1vAJ' }
+      ],
+      '11_computer_8': [
+        { title: 'Chapter 8: File Handling - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPzc3vAr777zg6zv_45z4WjQ' }
+      ],
+      '11_computer_9': [
+        { title: 'Chapter 9: Database - Full Playlist', url: 'https://www.youtube.com/playlist?list=PLI-NxcTUPiPzWWNh7y1N1MZ7Oog6l4R6y' }
+      ]
+    });
+
+    // Universal Video Player Function - Works with any URL
+    function playUniversalVideo(url, title) {
+      const playerContainer = document.getElementById('videoPlayer');
+      
+      // Detect video source
+      let embedHtml = '';
+      
+      if (url.includes('youtu.be') || url.includes('youtube.com')) {
+        // YouTube video or playlist
+        if (url.includes('playlist?list=')) {
+          // YouTube Playlist - embed as playlist
+          let playlistId = url.split('list=')[1].split('&')[0];
+          embedHtml = `<iframe src="https://www.youtube.com/embed/videoseries?list=${playlistId}&autoplay=1" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" style="width:100%;height:100%;border:0;"></iframe>`;
+        } else {
+          // Single YouTube video - use embed directly
+          let videoId = '';
+          if (url.includes('youtu.be/')) {
+            videoId = url.split('youtu.be/')[1].split('?')[0];
+          } else if (url.includes('watch?v=')) {
+            videoId = url.split('v=')[1].split('&')[0];
+          }
+          embedHtml = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" style="width:100%;height:100%;border:0;"></iframe>`;
+        }
+      } 
+      else if (url.includes('.mp4') || url.includes('.webm') || url.includes('.mkv')) {
+        // Direct video file
+        embedHtml = `<video controls autoplay style="width:100%;height:100%;"><source src="${url}" type="video/mp4">Your browser does not support video</video>`;
+      } 
+      else if (url.includes('dailymotion.com')) {
+        let videoId = url.split('/video/')[1].split('_')[0];
+        embedHtml = `<iframe src="https://www.dailymotion.com/embed/video/${videoId}" allowfullscreen style="width:100%;height:100%;border:0;"></iframe>`;
+      }
+      else if (url.includes('vimeo.com') && !url.includes('player.vimeo.com')) {
+        let videoId = url.split('vimeo.com/')[1];
+        embedHtml = `<iframe src="https://player.vimeo.com/video/${videoId}" allowfullscreen style="width:100%;height:100%;border:0;"></iframe>`;
+      }
+      else {
+        // Try as embed URL or direct link
+        embedHtml = `<iframe src="${url}" allowfullscreen style="width:100%;height:100%;border:0;"></iframe>`;
+      }
+      
+      playerContainer.innerHTML = embedHtml;
+      showScreen('screen-player');
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+  </script>
+</body>
+</html>

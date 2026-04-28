@@ -1,0 +1,148 @@
+# LearnDocs Hub - Project Documentation
+
+## Owner Information
+- **Owner:** Muhammad Hussain Shakir
+- **Project Name:** LearnDocs Hub (formerly "All-in-One Online Document Toolkit")
+- **Purpose:** Free online tools website for students (Class 9th & 10th) and general users
+
+---
+
+## Features Implemented
+
+### 1. Lecture Videos Page (lecture-videos.html)
+- Complete video library for Class 9th Math (New Book)
+- Navigation: Class → Medium (Urdu/English) → Subject → Chapter → Exercise → Video Player
+- Video storage system using addVideoLinks() function
+- YouTube embedded player support
+- Smart Syllabus section added
+
+#### Chapters Completed:
+- **Chapter 1 (Matrices):** Exercise 1.1, 1.2, 1.3, Review
+- **Chapter 2 (Real & Complex Numbers):** Exercise 2.1-2.4, Review
+- **Chapter 3 (Logarithms):** Exercise 3.1-3.3, Review
+- **Chapter 4 (Algebraic Expressions):** Exercise 4.1-4.4, Review
+- **Chapter 5 (Factorization):** Exercise 5.1-5.2, Review
+- **Chapter 6 (Algebraic Manipulation):** Exercise 6.1-6.6, Review
+- **Chapter 7 (Linear Equations):** Exercise 7.1-7.3, Review
+- **Chapter 8 (Linear Graphs):** Exercise 8.1, Review
+- **Chapter 9 (Coordinate Geometry):** Exercise 9.1-9.4, Review
+- **Chapter 10 (Congruent Triangles):** Exercise 10.1 (in progress)
+- **Smart Syllabus:** Part 1 & Part 2
+
+### 2. Test Paper Generator (test-paper-generator.html)
+- Generate test papers with MCQs, Short & Long questions
+- Advanced search filters:
+  - Filter by Chapter
+  - Filter by Type (MCQ/Short/Long)
+  - Filter by Important/Non-Important
+  - Text search
+- **Language Support:** English & Urdu (complete translation)
+- PDF generation with:
+  - School name, Teacher name, Test title
+  - Answer lines for Short/Long questions
+  - MCQ options in bordered table format
+  - Teacher signature option
+  - Multiple language support in PDF
+
+### 3. Global Search (index.html + i18n.js)
+- Search bar in navbar
+- Search any tool by name or keywords
+- Quick navigation to any tool
+
+### 4. Multi-language Support
+- Complete English & Urdu translations
+- Language switcher in navbar
+- All pages support both languages
+- PDF output in selected language
+
+### 5. Other Updates
+- Updated all pages with "LearnDocs Hub" name
+- Added 5 new themes (purple, teal, coral, lavender, slate)
+- Added keyboard shortcuts for new tools
+- Added Google Search Console meta tag placeholder
+
+---
+
+## Tools Available on LearnDocs Hub
+
+### PDF Tools (pdf-tools.html)
+- PDF to Word, Excel, PPT
+- Word/Excel/PPT to PDF
+- Merge, Split, Compress
+- Rotate, Delete pages
+- Add Page Numbers, Watermark
+- Remove Watermark, Unlock PDF
+
+### Image Tools (image-tools.html)
+- Resize, Crop, Compress
+- Convert formats (JPG, PNG, WebP, etc.)
+- Remove background
+- Photo editor, Collage maker
+
+### Audio Tools (audio-tools.html)
+- Convert audio formats
+- Trim, Merge audio
+- Volume control
+
+### Video Tools (video-tools.html)
+- Convert video formats
+- Trim, Merge videos
+- Compress videos
+
+### Text Tools (text-tools.html)
+- Word counter, Character counter
+- JSON formatter, HTML beautifier
+- Case converter, Lorem Ipsum
+
+### Business Tools (business-tools.html)
+- Invoice generator
+- Resume builder
+- EMI Calculator
+- Age Calculator
+
+### Social Media Tools (social-tools.html)
+- Instagram thumbnail maker
+- YouTube thumbnail maker
+- Social post sizes
+
+### Calculators (calculators.html)
+- BMI Calculator
+- Age Calculator
+- Unit Converter
+- EMI Calculator
+
+### Educational Tools
+- Test Paper Generator
+- Lecture Videos (Class 9th & 10th Math)
+- AI Chat
+
+---
+
+## Files Modified
+
+1. **index.html** - Main page with global search
+2. **lecture-videos.html** - Lecture videos with all math chapters
+3. **test-paper-generator.html** - Test paper generator with advanced features
+4. **i18n.js** - Global search and translations
+
+---
+
+## Technical Details
+
+- Pure HTML/CSS/JavaScript (no frameworks required)
+- Firebase for cloud storage (test papers)
+- jsPDF for PDF generation
+- YouTube embed player for videos
+- LocalStorage for language preference
+
+---
+
+## Contact
+
+For any questions or contributions:
+- **Owner:** Muhammad Hussain Shakir
+- **Website:** LearnDocs Hub
+
+---
+
+*Last Updated: April 2026*

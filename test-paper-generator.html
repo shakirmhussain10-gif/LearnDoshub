@@ -1,0 +1,1981 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Test Paper Generator | LearnDocs Hub</title>
+  <meta name="description" content="Create test papers, quizzes, and MCQs for classes 1-12. Add questions & generate PDF.">
+  <meta name="keywords" content="test paper generator, MCQ generator, quiz maker, create test papers, generate PDF">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://learndocs-hub.com/test-paper-generator.html">
+  
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Test Paper Generator | LearnDocs Hub">
+  <meta property="og:description" content="Create test papers, quizzes, and MCQs for classes 1-12.">
+  <meta property="og:url" content="https://learndocs-hub.com/test-paper-generator.html">
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Test Paper Generator | LearnDocs Hub">
+  <meta name="twitter:description" content="Create test papers & quizzes. Free PDF generator!">
+  
+  <!-- Schema.org structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Test Paper Generator - LearnDocs Hub",
+    "description": "Create test papers, quizzes, and MCQs for classes 1-12.",
+    "url": "https://learndocs-hub.com/test-paper-generator.html",
+    "applicationCategory": "ProductivityApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    :root {
+      --bg-light: #f8fafc;
+      --bg-card: #ffffff;
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+      --text-muted: #94a3b8;
+      --accent: #6366f1;
+      --accent-hover: #4f46e5;
+      --success: #10b981;
+      --danger: #ef4444;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.12);
+      --border: #e2e8f0;
+      --radius: 16px;
+    }
+    [data-theme="dark"] {
+      --bg-light: #0f172a;
+      --bg-card: #1e293b;
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --border: #334155;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.4);
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    a { text-decoration: none; color: inherit; }
+
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      padding: 0 24px; height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .nav-brand { font-size: 1rem; font-weight: 600; color: var(--accent); }
+    .lang-switch select {
+      padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--bg-card); color: var(--text-primary); font-size: 0.85rem;
+    }
+
+    .main-container { padding: 80px 20px 120px; max-width: 900px; margin: 0 auto; }
+
+    .page-title {
+      text-align: center; font-size: 2rem; font-weight: 800;
+      color: var(--text-primary); margin-bottom: 32px;
+    }
+
+    .card-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+    }
+    @media (max-width: 900px) {
+      .card-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 700px) {
+      .card-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 420px) {
+      .card-grid { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--bg-card); border-radius: var(--radius);
+      padding: 24px 16px; text-align: center;
+      cursor: pointer; box-shadow: var(--shadow);
+      transition: all 0.3s ease; border: 2px solid transparent;
+    }
+    .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+    .card.selected { border-color: var(--accent); background: rgba(99, 102, 241, 0.05); }
+
+    .card-icon {
+      width: 52px; height: 52px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 12px; font-size: 1.3rem; font-weight: 700; color: #fff;
+    }
+    .card-icon.class-1 { background: linear-gradient(135deg, #ef4444, #f87171); }
+    .card-icon.class-2 { background: linear-gradient(135deg, #f97316, #fb923c); }
+    .card-icon.class-3 { background: linear-gradient(135deg, #eab308, #facc15); }
+    .card-icon.class-4 { background: linear-gradient(135deg, #22c55e, #4ade80); }
+    .card-icon.class-5 { background: linear-gradient(135deg, #10b981, #34d399); }
+    .card-icon.class-6 { background: linear-gradient(135deg, #14b8a6, #2dd4bf); }
+    .card-icon.class-7 { background: linear-gradient(135deg, #06b6d4, #22d3ee); }
+    .card-icon.class-8 { background: linear-gradient(135deg, #0ea5e9, #38bdf8); }
+    .card-icon.class-9 { background: linear-gradient(135deg, #6366f1, #818cf8); }
+    .card-icon.class-10 { background: linear-gradient(135deg, #8b5cf6, #a78bfa); }
+    .card-icon.class-11 { background: linear-gradient(135deg, #a855f7, #c084fc); }
+    .card-icon.class-12 { background: linear-gradient(135deg, #ec4899, #f472b6); }
+    .card-icon.add { background: linear-gradient(135deg, #25D366, #34D759); }
+    .card-icon.other { background: linear-gradient(135deg, #64748b, #94a3b8); }
+
+    .card-title { font-size: 0.95rem; font-weight: 600; color: var(--text-primary); }
+
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    .back-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 20px; background: var(--bg-card);
+      border: 1px solid var(--border); border-radius: 10px;
+      color: var(--text-primary); font-weight: 500; cursor: pointer;
+      margin-bottom: 24px;
+    }
+    .back-btn:hover { background: var(--border); }
+
+    .screen-title {
+      font-size: 1.4rem; font-weight: 700;
+      color: var(--text-primary); margin-bottom: 20px;
+    }
+
+    .form-section {
+      background: var(--bg-card); border-radius: var(--radius);
+      padding: 24px; margin-bottom: 20px; box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+    .form-title {
+      font-size: 1.1rem; font-weight: 600; margin-bottom: 16px;
+      color: var(--text-primary);
+    }
+    .form-group { margin-bottom: 16px; }
+    .form-group label {
+      display: block; font-weight: 500; margin-bottom: 8px; color: var(--text-secondary);
+    }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 12px 16px; border: 1px solid var(--border);
+      border-radius: 10px; background: var(--bg-light);
+      color: var(--text-primary); font-size: 1rem; font-family: inherit;
+    }
+    .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--accent); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 500px) { .form-row { grid-template-columns: 1fr; } }
+
+    .toggle-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px 0; border-bottom: 1px solid var(--border);
+    }
+    .toggle-row:last-child { border-bottom: none; }
+    .toggle-label { font-weight: 500; color: var(--text-primary); }
+    .toggle-switch { position: relative; width: 50px; height: 26px; }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #ccc; transition: 0.3s; border-radius: 26px;
+    }
+    .toggle-slider:before {
+      position: absolute; content: ""; height: 20px; width: 20px;
+      left: 3px; bottom: 3px; background-color: white;
+      transition: 0.3s; border-radius: 50%;
+    }
+    input:checked + .toggle-slider { background-color: var(--accent); }
+    input:checked + .toggle-slider:before { transform: translateX(24px); }
+
+    .question-section { margin-bottom: 24px; }
+    .question-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 18px; background: var(--accent);
+      border-radius: 12px; color: #fff;
+      margin-bottom: 12px; cursor: pointer;
+    }
+    .question-header h3 { font-size: 1rem; font-weight: 600; flex: 1; }
+    .question-count { background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; }
+
+    .question-item {
+      background: var(--bg-card); border-radius: 12px;
+      padding: 16px; margin-bottom: 10px; box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+    .question-item-header {
+      display: flex; align-items: flex-start; gap: 12px;
+    }
+    .question-item input[type="checkbox"] {
+      width: 20px; height: 20px; margin-top: 2px; accent-color: var(--accent);
+    }
+    .question-content { flex: 1; }
+    .question-text { font-weight: 500; margin-bottom: 8px; }
+    .question-meta { font-size: 0.8rem; color: var(--text-muted); }
+    .mcq-options { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 10px; border: 2px solid #333; padding: 10px; border-radius: 8px; }
+    .option { padding: 8px 12px; background: var(--bg-light); border: 1px solid #ccc; border-radius: 4px; font-size: 0.85rem; color: var(--text-secondary); }
+
+    .selected-count {
+      position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+      background: var(--accent); color: #fff; padding: 12px 24px;
+      border-radius: 30px; font-weight: 600;
+      box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+      z-index: 100;
+    }
+
+    .btn {
+      padding: 14px 28px; border-radius: 12px; border: none;
+      font-size: 1rem; font-weight: 600; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-outline {
+      background: transparent; color: var(--accent);
+      border: 2px solid var(--accent);
+    }
+    .btn-outline:hover { background: rgba(99, 102, 241, 0.08); }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-success { background: var(--success); color: #fff; }
+    .btn-whatsapp { background: #25D366; color: #fff; }
+    .btn-whatsapp:hover { background: #1fb958; }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .btn-group { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
+    .btn-group .btn { flex: 1; min-width: 140px; }
+
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: var(--accent); color: #fff; padding: 12px 24px;
+      border-radius: 10px; font-weight: 500; z-index: 10000;
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .toast.show { opacity: 1; }
+
+    .other-input { display: none; margin-top: 12px; }
+    .other-input.show { display: block; }
+
+    .add-custom-btn {
+      display: block; width: 100%; padding: 12px;
+      background: var(--bg-light); border: 2px dashed var(--border);
+      border-radius: 12px; text-align: center;
+      color: var(--text-secondary); font-weight: 500;
+      cursor: pointer; margin-top: 12px;
+    }
+    .add-custom-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 2px 8px; border-radius: 999px;
+      font-size: 0.7rem; font-weight: 600;
+      background: rgba(239, 68, 68, 0.12); color: #ef4444;
+      margin-left: 8px;
+    }
+
+    .next-btn {
+      position: fixed; bottom: 24px; right: 24px;
+      width: 60px; height: 60px; border-radius: 50%;
+      background: var(--danger); color: #fff;
+      border: none; font-size: 1.5rem;
+      cursor: pointer; box-shadow: 0 4px 20px rgba(239, 68, 68, 0.4);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 100;
+    }
+    .next-btn:hover { transform: scale(1.1); }
+
+    @media (max-width: 700px) {
+      .navbar { height: auto; padding: 10px 16px; }
+      .nav-brand { font-size: 0.95rem; }
+      .main-container { padding: 96px 14px 120px; }
+      .page-title { font-size: 1.6rem; margin-bottom: 24px; }
+      .card { padding: 18px 12px; }
+      .form-section { padding: 18px; }
+      .screen-title { font-size: 1.2rem; }
+      .question-item-header { flex-direction: column; }
+      .mcq-options { grid-template-columns: 1fr; }
+      .btn-group .btn { min-width: 0; width: 100%; }
+      .selected-count { left: 16px; right: 16px; transform: none; text-align: center; bottom: 96px; }
+      .next-btn { width: 52px; height: 52px; right: 16px; bottom: 20px; font-size: 1.3rem; }
+      .toast { left: 16px; right: 16px; transform: none; text-align: center; }
+    }
+
+    @media (min-width: 1200px) {
+      .main-container { max-width: 1024px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="index.html" class="nav-brand">⬅ Back to Home</a>
+    <div class="lang-switch">
+      <select id="langSelect" aria-label="Language">
+        <option value="en">English</option>
+        <option value="ur">اردو</option>
+      </select>
+    </div>
+  </nav>
+
+  <div class="main-container">
+
+    <!-- Screen 1: Class Selection -->
+    <div id="screen-class" class="screen active">
+      <h1 class="page-title">📝 Test Paper Generator</h1>
+      
+      <div class="card-grid" id="classGrid"></div>
+
+      <div style="margin-top: 16px;">
+        <div class="card" onclick="showOtherClass()">
+          <div class="card-icon other">✏️</div>
+          <div class="card-title">Other Class</div>
+        </div>
+      </div>
+
+      <div class="other-input" id="otherClassInput">
+        <div class="form-section">
+          <div class="form-group">
+            <label>Enter Class Name</label>
+            <input type="text" id="customClassName" placeholder="e.g., Nursery, UKG, BBA, MBA">
+          </div>
+          <button class="btn btn-primary" onclick="selectCustomClass()">Continue</button>
+        </div>
+      </div>
+
+      <div style="margin-top: 16px;">
+        <div class="card" onclick="showAddQuestion()">
+          <div class="card-icon add">+</div>
+          <div class="card-title">Add Question</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 2: Subject Selection -->
+    <div id="screen-subject" class="screen">
+      <button class="back-btn" onclick="goBack()">⬅ Back</button>
+      <h2 class="screen-title" id="subjectTitle">Select Subject - Class 9</h2>
+      
+      <div class="card-grid" id="subjectGrid"></div>
+
+      <div style="margin-top: 16px;">
+        <div class="card" onclick="showOtherSubject()">
+          <div class="card-icon other">✏️</div>
+          <div class="card-title">Other Subject</div>
+        </div>
+      </div>
+
+      <div class="other-input" id="otherSubjectInput">
+        <div class="form-section">
+          <div class="form-group">
+            <label>Enter Subject Name</label>
+            <input type="text" id="customSubjectName" placeholder="e.g., Biology, Statistics">
+          </div>
+          <button class="btn btn-primary" onclick="selectCustomSubject()">Continue</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 3: Question Selection -->
+    <div id="screen-questions" class="screen">
+      <button class="back-btn" onclick="goToSubject()">⬅ Back</button>
+      <h2 class="screen-title" id="questionsTitle">Select Questions</h2>
+
+      <!-- Advanced Search -->
+      <div class="form-section" style="padding: 16px;">
+        <div class="form-row">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label>📖 Chapter</label>
+            <select id="chapterSelect" onchange="filterByChapter()">
+              <option value="">All Chapters</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label>📝 Type</label>
+            <select id="typeFilter" onchange="filterByChapter()">
+              <option value="">All Types</option>
+              <option value="mcq">MCQ</option>
+              <option value="short">Short</option>
+              <option value="long">Long</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row" style="margin-top: 12px;">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label>⭐ Important</label>
+            <select id="importantFilter" onchange="filterByChapter()">
+              <option value="">All</option>
+              <option value="important">Important Only</option>
+              <option value="normal">Non-Important</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label>🔍 Search</label>
+            <input type="text" id="questionSearch" placeholder="Search questions..." oninput="searchQuestions()">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section" style="padding: 16px;">
+        <div class="form-title">⭐ Important Questions</div>
+        <div class="btn-group" style="margin-top: 0;">
+          <button class="btn btn-outline" onclick="autoSelectImportant()">Auto-Select Important MCQs</button>
+          <button class="btn btn-outline" onclick="clearSelection()">Clear Selection</button>
+        </div>
+      </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label>🔍 Search</label>
+            <input type="text" id="questionSearch" placeholder="Search questions..." oninput="searchQuestions()">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section" style="padding: 16px;">
+        <div class="form-title">⭐ Important Questions</div>
+        <div class="btn-group" style="margin-top: 0;">
+          <button class="btn btn-outline" onclick="autoSelectImportant()">Auto-Select Important MCQs</button>
+          <button class="btn btn-outline" onclick="clearSelection()">Clear Selection</button>
+        </div>
+      </div>
+
+      <div id="questionsContainer"></div>
+
+      <div class="add-custom-btn" onclick="showAddCustomQuestion()">
+        ➕ Add Your Own Question
+      </div>
+
+      <div id="customQuestionSection" class="form-section" style="display:none; margin-top: 16px;">
+        <div class="form-group">
+          <label>📖 Chapter (Optional)</label>
+          <input type="text" id="customQChapter" placeholder="e.g., Chapter 1, Unit 2">
+        </div>
+        <div class="form-group">
+          <label>Question Type</label>
+          <select id="customQType">
+            <option value="mcq">MCQ (4 Options)</option>
+            <option value="short">Short Question</option>
+            <option value="long">Long Question</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>
+            <input type="checkbox" id="customQImportant">
+            Mark as Important
+          </label>
+        </div>
+        <div class="form-group">
+          <label>Question Text</label>
+          <textarea id="customQText" placeholder="Enter your question..."></textarea>
+        </div>
+        <div id="customMCQOptions">
+          <div class="form-group"><label>Option A</label><input type="text" id="customOptA"></div>
+          <div class="form-group"><label>Option B</label><input type="text" id="customOptB"></div>
+          <div class="form-group"><label>Option C</label><input type="text" id="customOptC"></div>
+          <div class="form-group"><label>Option D</label><input type="text" id="customOptD"></div>
+          <div class="form-group">
+            <label>Correct Answer</label>
+            <select id="customCorrect"><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option></select>
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="addCustomQuestion()">Add Question</button>
+      </div>
+
+      <div class="selected-count" id="selectedCount">Selected: 0 Questions</div>
+      <button class="next-btn" onclick="goToSettings()">➡</button>
+    </div>
+
+    <!-- Screen 4: Paper Settings -->
+    <div id="screen-settings" class="screen">
+      <button class="back-btn" onclick="goToQuestions()">⬅ Back</button>
+      <h2 class="screen-title">📄 Paper Settings</h2>
+
+      <div class="form-section">
+        <div class="form-row">
+          <div class="form-group">
+            <label>School Name</label>
+            <input type="text" id="schoolName" placeholder="Enter school name">
+          </div>
+          <div class="form-group">
+            <label>Teacher Name</label>
+            <input type="text" id="teacherName" placeholder="Teacher name">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Test Title</label>
+            <select id="testTitle">
+              <option value="Class Test">Class Test</option>
+              <option value="Mid Term Exam">Mid Term Exam</option>
+              <option value="Final Exam">Final Exam</option>
+              <option value="Quiz">Quiz</option>
+              <option value="Homework">Homework</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Test Time (Minutes)</label>
+            <input type="number" id="testTime" value="30" min="5">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Total Marks</label>
+            <input type="number" id="totalMarks" value="50">
+          </div>
+          <div class="form-group">
+            <label>Font Size</label>
+            <select id="fontSize">
+              <option value="10">Small (10pt)</option>
+              <option value="12" selected>Medium (12pt)</option>
+              <option value="14">Large (14pt)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Watermark (Optional)</label>
+          <input type="text" id="watermark" placeholder="Enter your watermark text">
+        </div>
+
+        <div class="form-group">
+          <label>Instructions</label>
+          <textarea id="instructions" placeholder="Any special instructions..."></textarea>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-title">📋 Layout Options</div>
+
+        <div class="toggle-row">
+          <span class="toggle-label">Show Class Name</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="showClass" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-row">
+          <span class="toggle-label">Teacher Signature Line</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="showSignature" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="previewQuestionSheet()">👁️ Preview (No Lines)</button>
+        <button class="btn btn-primary" onclick="previewLinedPaper()">👁️ Preview (With Lines)</button>
+        <button class="btn btn-primary" onclick="downloadQuestionSheet()">📥 Download (No Lines)</button>
+        <button class="btn btn-primary" onclick="downloadLinedPaper()">📥 Download (With Lines)</button>
+        <button class="btn btn-whatsapp" id="shareWhatsAppBtn" onclick="shareWhatsApp()" disabled>🟢 Share on WhatsApp</button>
+        <button class="btn btn-success" onclick="downloadAnswerKey()">🔑 Answer Key</button>
+        <button class="btn btn-success" onclick="downloadBubbleSheet()" style="background: linear-gradient(135deg, #0ea5e9, #38bdf8);">⭕ Bubble Sheet</button>
+      </div>
+
+      <div class="form-section" style="margin-top: 20px;">
+        <div class="form-title">✏️ E Paper Lines</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Short Question Lines (Min 4)</label>
+            <input type="number" id="shortLines" value="4" min="4">
+          </div>
+          <div class="form-group">
+            <label>Long Question Lines (Min 50)</label>
+            <input type="number" id="longLines" value="50" min="50">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section" style="margin-top: 20px;">
+        <div class="form-title">🧾 Board Paper Pattern (Choices)</div>
+        <div class="toggle-row">
+          <span class="toggle-label">Enable Choice Pattern</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="enableChoices">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div id="choiceOptions" style="display:none; margin-top: 16px;">
+          <div class="form-group">
+            <label>MCQ Section Heading</label>
+            <input type="text" id="mcqHeading" value="Section A - MCQs">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>MCQs: Attempt</label>
+              <input type="number" id="mcqAttempt" min="1" placeholder="e.g., 5">
+            </div>
+            <div class="form-group">
+              <label>MCQs: Total (Auto)</label>
+              <input type="text" id="mcqTotal" readonly>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Short Section Heading</label>
+            <input type="text" id="shortHeading" value="Section B - Short Questions">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Short: Attempt</label>
+              <input type="number" id="shortAttempt" min="1" placeholder="e.g., 4">
+            </div>
+            <div class="form-group">
+              <label>Short: Total (Auto)</label>
+              <input type="text" id="shortTotal" readonly>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Long Section Heading</label>
+            <input type="text" id="longHeading" value="Section C - Long Questions">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Long: Attempt</label>
+              <input type="number" id="longAttempt" min="1" placeholder="e.g., 2">
+            </div>
+            <div class="form-group">
+              <label>Long: Total (Auto)</label>
+              <input type="text" id="longTotal" readonly>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 5: Add Question -->
+    <div id="screen-add" class="screen">
+      <button class="back-btn" onclick="goBack()">⬅ Back</button>
+      <h2 class="screen-title">➕ Add New Question</h2>
+
+      <div class="form-section">
+        <div class="form-group">
+          <label>Select Class</label>
+          <select id="addClass">
+            <option value="">Select Class</option>
+            <option value="1">Class 1</option>
+            <option value="2">Class 2</option>
+            <option value="3">Class 3</option>
+            <option value="4">Class 4</option>
+            <option value="5">Class 5</option>
+            <option value="6">Class 6</option>
+            <option value="7">Class 7</option>
+            <option value="8">Class 8</option>
+            <option value="9">Class 9</option>
+            <option value="10">Class 10</option>
+            <option value="11">Class 11</option>
+            <option value="12">Class 12</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="customClassDiv" style="display:none;">
+          <label>Enter Class Name</label>
+          <input type="text" id="addCustomClass" placeholder="e.g., Nursery, BBA">
+        </div>
+
+        <div class="form-group">
+          <label>Subject Name</label>
+          <input type="text" id="addSubject" placeholder="e.g., Mathematics">
+        </div>
+
+        <div class="form-group">
+          <label>Chapter (Optional)</label>
+          <input type="text" id="addChapter" placeholder="e.g., Chapter 1, Unit 2">
+        </div>
+
+        <div class="form-group">
+          <label>Question Type</label>
+          <select id="addType">
+            <option value="mcq">MCQ (4 Options)</option>
+            <option value="short">Short Question</option>
+            <option value="long">Long Question</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>
+            <input type="checkbox" id="addImportant">
+            Mark as Important
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label>Question Text</label>
+          <textarea id="addQuestionText" placeholder="Enter your question..."></textarea>
+        </div>
+
+        <div id="mcqOptionsDiv">
+          <div class="form-group"><label>Option A</label><input type="text" id="addOptionA"></div>
+          <div class="form-group"><label>Option B</label><input type="text" id="addOptionB"></div>
+          <div class="form-group"><label>Option C</label><input type="text" id="addOptionC"></div>
+          <div class="form-group"><label>Option D</label><input type="text" id="addOptionD"></div>
+          <div class="form-group">
+            <label>Correct Answer</label>
+            <select id="addCorrect"><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option></select>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" onclick="saveQuestion()">💾 Save Question</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDOpXs8ehrfEoIv8PYN3qOOrkTwCDiMOUM",
+      authDomain: "test-paper-generater-app.firebaseapp.com",
+      projectId: "test-paper-generater-app",
+      storageBucket: "test-paper-generater-app.firebasestorage.app",
+      messagingSenderId: "699410741010",
+      appId: "1:699410741010:web:adb0c7a75b9a7b46c225cb"
+    };
+
+    let db;
+    let allQuestions = [];
+    let currentClass = '';
+    let currentSubject = '';
+    let selectedQuestions = [];
+    let customClasses = [];
+    let customSubjectsByClass = {};
+    let lastGeneratedPdfBlob = null;
+    let lastGeneratedFileName = null;
+
+    function initFirebase() {
+      if (typeof firebase !== 'undefined') {
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.firestore();
+        loadQuestions();
+        loadCustomMetadata();
+      } else {
+        loadLocalQuestions();
+        loadLocalMetadata();
+      }
+    }
+
+    function loadQuestions() {
+      if (db) {
+        db.collection('questions').get().then(snapshot => {
+          allQuestions = [];
+          snapshot.forEach(doc => {
+            allQuestions.push({ id: doc.id, ...doc.data() });
+          });
+          renderClasses();
+        }).catch(() => { loadLocalQuestions(); });
+      }
+    }
+
+    function loadCustomMetadata() {
+      if (!db) { return; }
+      Promise.all([
+        db.collection('customClasses').get(),
+        db.collection('customSubjects').get()
+      ]).then(([classSnap, subjectSnap]) => {
+        customClasses = [];
+        classSnap.forEach(doc => {
+          if (doc.data().name) customClasses.push(doc.data().name);
+        });
+        customSubjectsByClass = {};
+        subjectSnap.forEach(doc => {
+          const data = doc.data();
+          if (!data.class || !data.subject) return;
+          if (!customSubjectsByClass[data.class]) customSubjectsByClass[data.class] = [];
+          customSubjectsByClass[data.class].push(data.subject);
+        });
+        renderClasses();
+      }).catch(() => { loadLocalMetadata(); });
+    }
+
+    function loadLocalQuestions() {
+      try {
+        const stored = localStorage.getItem('tpg_questions');
+        allQuestions = stored ? JSON.parse(stored) : [];
+      } catch (e) {
+        allQuestions = [];
+      }
+      renderClasses();
+    }
+
+    function loadLocalMetadata() {
+      try {
+        const storedClasses = localStorage.getItem('tpg_custom_classes');
+        customClasses = storedClasses ? JSON.parse(storedClasses) : [];
+        const storedSubjects = localStorage.getItem('tpg_custom_subjects');
+        customSubjectsByClass = storedSubjects ? JSON.parse(storedSubjects) : {};
+      } catch (e) {
+        customClasses = [];
+        customSubjectsByClass = {};
+      }
+      renderClasses();
+    }
+
+    function saveToLocal() {
+      try {
+        localStorage.setItem('tpg_questions', JSON.stringify(allQuestions));
+      } catch (e) {}
+    }
+
+    function saveMetadataToLocal() {
+      try {
+        localStorage.setItem('tpg_custom_classes', JSON.stringify(customClasses));
+        localStorage.setItem('tpg_custom_subjects', JSON.stringify(customSubjectsByClass));
+      } catch (e) {}
+    }
+
+    function upsertCustomClass(name) {
+      if (!name) return;
+      const numeric = Number(name);
+      if (!Number.isNaN(numeric) && numeric >= 1 && numeric <= 12) return;
+      if (!customClasses.includes(name)) {
+        customClasses.push(name);
+        saveMetadataToLocal();
+      }
+      if (db) {
+        const id = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || `class-${Date.now()}`;
+        db.collection('customClasses').doc(id).set({ name, createdAt: new Date().toISOString() }, { merge: true }).catch(() => {});
+      }
+    }
+
+    function upsertCustomSubject(className, subjectName) {
+      if (!className || !subjectName) return;
+      if (!customSubjectsByClass[className]) customSubjectsByClass[className] = [];
+      if (!customSubjectsByClass[className].includes(subjectName)) {
+        customSubjectsByClass[className].push(subjectName);
+        saveMetadataToLocal();
+      }
+      if (db) {
+        const classId = className.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || `class-${Date.now()}`;
+        const subjectId = subjectName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || `subject-${Date.now()}`;
+        db.collection('customSubjects').doc(`${classId}__${subjectId}`).set({
+          class: className,
+          subject: subjectName,
+          createdAt: new Date().toISOString()
+        }, { merge: true }).catch(() => {});
+      }
+    }
+
+    function renderClasses() {
+      const grid = document.getElementById('classGrid');
+      let html = '';
+      for (let i = 1; i <= 12; i++) {
+        html += `<div class="card" onclick="selectClass('${i}')"><div class="card-icon class-${i}">${i}</div><div class="card-title">Class ${i}</div></div>`;
+      }
+      if (customClasses.length > 0) {
+        customClasses.forEach(cls => {
+          html += `<div class="card" onclick="selectClass('${cls}')"><div class="card-icon other">★</div><div class="card-title">${cls}</div></div>`;
+        });
+      }
+      grid.innerHTML = html;
+    }
+
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    function goBack() { showScreen('screen-class'); }
+    function goToSubject() { showScreen('screen-subject'); }
+    function goToQuestions() { showScreen('screen-questions'); }
+    function goToSettings() { showScreen('screen-settings'); }
+
+    function selectClass(cls) {
+      currentClass = cls;
+      goToSubject();
+    }
+
+    function showOtherClass() {
+      document.getElementById('otherClassInput').classList.toggle('show');
+    }
+
+    function selectCustomClass() {
+      const name = document.getElementById('customClassName').value.trim();
+      if (!name) { showToast('Enter class name'); return; }
+      currentClass = name;
+      upsertCustomClass(name);
+      document.getElementById('customClassName').value = '';
+      document.getElementById('otherClassInput').classList.remove('show');
+      goToSubject();
+    }
+
+    function showOtherSubject() {
+      document.getElementById('otherSubjectInput').classList.toggle('show');
+    }
+
+    function selectCustomSubject() {
+      const name = document.getElementById('customSubjectName').value.trim();
+      if (!name) { showToast('Enter subject name'); return; }
+      currentSubject = name;
+      upsertCustomSubject(currentClass, name);
+      document.getElementById('customSubjectName').value = '';
+      document.getElementById('otherSubjectInput').classList.remove('show');
+      loadQuestionsForSubject();
+    }
+
+    function goToSubject() {
+      document.getElementById('subjectTitle').textContent = `Select Subject - Class ${currentClass}`;
+      
+      const questionSubjects = allQuestions.filter(q => q.class === currentClass || q.class === String(currentClass)).map(q => q.subject);
+      const customSubjects = customSubjectsByClass[currentClass] || [];
+      const subjects = [...new Set([...questionSubjects, ...customSubjects])];
+      
+      const grid = document.getElementById('subjectGrid');
+      if (subjects.length === 0) {
+        grid.innerHTML = '<div style="grid-column:span 4; text-align:center; padding:40px; color:var(--text-muted);">No questions yet. Add questions first!</div>';
+      } else {
+        grid.innerHTML = subjects.map(sub => `
+          <div class="card" onclick="selectSubject('${sub}')">
+            <div class="card-icon" style="background:linear-gradient(135deg,var(--accent),var(--accent-hover))">${sub.charAt(0)}</div>
+            <div class="card-title">${sub}</div>
+          </div>
+        `).join('');
+      }
+      showScreen('screen-subject');
+    }
+
+    function selectSubject(sub) {
+      currentSubject = sub;
+      loadQuestionsForSubject();
+      goToQuestions();
+    }
+
+    function loadQuestionsForSubject() {
+      document.getElementById('questionsTitle').textContent = `${currentSubject} - Class ${currentClass}`;
+      
+      // Populate chapters
+      const questions = allQuestions.filter(q => (q.class === currentClass || q.class === String(currentClass)) && q.subject === currentSubject);
+      const chapters = [...new Set(questions.map(q => q.chapter).filter(c => c))];
+      const chapterSelect = document.getElementById('chapterSelect');
+      chapterSelect.innerHTML = '<option value="">All Chapters</option>';
+      chapters.forEach(ch => {
+        chapterSelect.innerHTML += `<option value="${ch}">${ch}</option>`;
+      });
+
+      // Clear search
+      document.getElementById('questionSearch').value = '';
+      
+      renderCurrentQuestions();
+    }
+
+    function filterByChapter() {
+      renderCurrentQuestions();
+    }
+
+    function searchQuestions() {
+      renderCurrentQuestions();
+    }
+
+    function getVisibleQuestions() {
+      const chapter = document.getElementById('chapterSelect').value;
+      const search = document.getElementById('questionSearch').value.toLowerCase();
+      const typeFilter = document.getElementById('typeFilter').value;
+      const importantFilter = document.getElementById('importantFilter').value;
+      
+      let questions = allQuestions.filter(q => (q.class === currentClass || q.class === String(currentClass)) && q.subject === currentSubject);
+      
+      if (chapter) {
+        questions = questions.filter(q => q.chapter === chapter);
+      }
+      if (typeFilter) {
+        questions = questions.filter(q => q.type === typeFilter);
+      }
+      if (importantFilter === 'important') {
+        questions = questions.filter(q => q.important === true);
+      }
+      if (importantFilter === 'normal') {
+        questions = questions.filter(q => q.important !== true);
+      }
+      if (search) {
+        questions = questions.filter(q => q.text.toLowerCase().includes(search));
+      }
+      return questions;
+    }
+
+    function renderCurrentQuestions() {
+      renderQuestions(getVisibleQuestions());
+      updateChoiceTotals();
+    }
+
+    function renderQuestions(questions) {
+      const mcqs = questions.filter(q => q.type === 'mcq');
+      const shorts = questions.filter(q => q.type === 'short');
+      const longs = questions.filter(q => q.type === 'long');
+
+      let html = '';
+
+      if (mcqs.length > 0) {
+        html += `
+          <div class="question-section">
+            <div class="question-header">
+              <h3>📋 MCQs</h3>
+              <span class="question-count">${mcqs.length}</span>
+            </div>
+            ${mcqs.map(q => `
+              <div class="question-item">
+                <div class="question-item-header">
+                  <input type="checkbox" class="q-checkbox" data-id="${q.id}" onchange="updateSelection('${q.id}')" ${selectedQuestions.includes(q.id) ? 'checked' : ''}>
+                  <div class="question-content">
+                    <div class="question-text">${q.text}${q.important ? '<span class="badge">Important</span>' : ''}</div>
+                    <div class="question-meta">${q.chapter ? '📖 ' + q.chapter : ''} | ID: ${q.id.substring(0,8)}${q.correct ? ` | Correct: ${q.correct}` : ''}</div>
+                    ${q.options ? `<div class="mcq-options">
+                      <div class="option">A) ${q.options.A}</div>
+                      <div class="option">B) ${q.options.B}</div>
+                      <div class="option">C) ${q.options.C}</div>
+                      <div class="option">D) ${q.options.D}</div>
+                    </div>` : ''}
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      if (shorts.length > 0) {
+        html += `
+          <div class="question-section">
+            <div class="question-header" style="background: linear-gradient(135deg, #10b981, #34d399);">
+              <h3>📝 Short Questions</h3>
+              <span class="question-count">${shorts.length}</span>
+            </div>
+            ${shorts.map(q => `
+              <div class="question-item">
+                <div class="question-item-header">
+                  <input type="checkbox" class="q-checkbox" data-id="${q.id}" onchange="updateSelection('${q.id}')" ${selectedQuestions.includes(q.id) ? 'checked' : ''}>
+                  <div class="question-content">
+                    <div class="question-text">${q.text}${q.important ? '<span class="badge">Important</span>' : ''}</div>
+                    <div class="question-meta">${q.chapter ? '📖 ' + q.chapter : ''}</div>
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      if (longs.length > 0) {
+        html += `
+          <div class="question-section">
+            <div class="question-header" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);">
+              <h3>📄 Long Questions</h3>
+              <span class="question-count">${longs.length}</span>
+            </div>
+            ${longs.map(q => `
+              <div class="question-item">
+                <div class="question-item-header">
+                  <input type="checkbox" class="q-checkbox" data-id="${q.id}" onchange="updateSelection('${q.id}')" ${selectedQuestions.includes(q.id) ? 'checked' : ''}>
+                  <div class="question-content">
+                    <div class="question-text">${q.text}${q.important ? '<span class="badge">Important</span>' : ''}</div>
+                    <div class="question-meta">${q.chapter ? '📖 ' + q.chapter : ''}</div>
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      if (questions.length === 0) {
+        html = '<div style="text-align:center;padding:40px;color:var(--text-muted);">No questions found!</div>';
+      }
+
+      document.getElementById('questionsContainer').innerHTML = html;
+    }
+
+    function updateSelection(qId) {
+      const checkbox = document.querySelector(`input[data-id="${qId}"]`);
+      if (checkbox.checked) {
+        if (!selectedQuestions.includes(qId)) {
+          selectedQuestions.push(qId);
+        }
+      } else {
+        selectedQuestions = selectedQuestions.filter(id => id !== qId);
+      }
+      updateSelectedCount();
+    }
+
+    function updateSelectedCount() {
+      document.getElementById('selectedCount').textContent = `Selected: ${selectedQuestions.length} Questions`;
+      updateChoiceTotals();
+    }
+
+    function clearSelection() {
+      selectedQuestions = [];
+      renderCurrentQuestions();
+      updateSelectedCount();
+    }
+
+    function autoSelectImportant() {
+      const visible = allQuestions.filter(q => (q.class === currentClass || q.class === String(currentClass)) && q.subject === currentSubject);
+      const importantMcqs = visible.filter(q => q.type === 'mcq' && q.important);
+      if (importantMcqs.length === 0) {
+        showToast('No important MCQs found!');
+        return;
+      }
+      selectedQuestions = importantMcqs.map(q => q.id);
+      renderCurrentQuestions();
+      updateSelectedCount();
+      showToast('Important MCQs selected!');
+    }
+
+    function showAddCustomQuestion() {
+      document.getElementById('customQuestionSection').style.display = 'block';
+      updateCustomOptionVisibility();
+    }
+
+    function updateCustomOptionVisibility() {
+      const type = document.getElementById('customQType')?.value;
+      const options = document.getElementById('customMCQOptions');
+      if (!options) return;
+      options.style.display = type === 'mcq' ? 'block' : 'none';
+    }
+
+    function addCustomQuestion() {
+      const chapter = document.getElementById('customQChapter').value.trim();
+      const type = document.getElementById('customQType').value;
+      const text = document.getElementById('customQText').value.trim();
+      
+      if (!text) { showToast('Enter question text'); return; }
+
+      const question = {
+        id: 'custom_' + Date.now(),
+        class: currentClass,
+        subject: currentSubject,
+        chapter: chapter || null,
+        type: type,
+        text: text,
+        important: document.getElementById('customQImportant').checked,
+        createdAt: new Date().toISOString()
+      };
+
+      if (type === 'mcq') {
+        question.options = {
+          A: document.getElementById('customOptA').value,
+          B: document.getElementById('customOptB').value,
+          C: document.getElementById('customOptC').value,
+          D: document.getElementById('customOptD').value
+        };
+        question.correct = document.getElementById('customCorrect').value;
+      }
+
+      allQuestions.push(question);
+      saveToLocal();
+      
+      if (db) {
+        db.collection('questions').add(question).catch(() => {});
+      }
+
+      showToast('Question added!');
+      document.getElementById('customQuestionSection').style.display = 'none';
+      loadQuestionsForSubject();
+    }
+
+    function goToSettings() {
+      if (selectedQuestions.length === 0) {
+        showToast('Select at least one question!');
+        return;
+      }
+      showScreen('screen-settings');
+    }
+
+    function showAddQuestion() {
+      showScreen('screen-add');
+    }
+
+    document.getElementById('addClass').addEventListener('change', function() {
+      document.getElementById('customClassDiv').style.display = this.value === 'other' ? 'block' : 'none';
+    });
+
+    document.getElementById('addType').addEventListener('change', function() {
+      document.getElementById('mcqOptionsDiv').style.display = this.value === 'mcq' ? 'block' : 'none';
+    });
+
+    document.getElementById('customQType').addEventListener('change', function() {
+      updateCustomOptionVisibility();
+    });
+
+    function saveQuestion() {
+      let cls = document.getElementById('addClass').value;
+      if (cls === 'other') cls = document.getElementById('addCustomClass').value.trim();
+      const subject = document.getElementById('addSubject').value.trim();
+      const chapter = document.getElementById('addChapter').value.trim();
+      const type = document.getElementById('addType').value;
+      const text = document.getElementById('addQuestionText').value.trim();
+
+      if (!cls || !subject || !text) { showToast('Fill all fields'); return; }
+
+      const question = {
+        class: String(cls),
+        subject,
+        chapter: chapter || null,
+        type,
+        text,
+        important: document.getElementById('addImportant').checked,
+        createdAt: new Date().toISOString()
+      };
+
+      if (type === 'mcq') {
+        question.options = {
+          A: document.getElementById('addOptionA').value,
+          B: document.getElementById('addOptionB').value,
+          C: document.getElementById('addOptionC').value,
+          D: document.getElementById('addOptionD').value
+        };
+        question.correct = document.getElementById('addCorrect').value;
+      }
+
+      if (db) {
+        db.collection('questions').add(question).then(() => {
+          allQuestions.push({ id: Date.now().toString(), ...question });
+          upsertCustomClass(String(cls));
+          upsertCustomSubject(String(cls), subject);
+          showToast('Saved to cloud!');
+          goBack();
+        }).catch(() => {
+          allQuestions.push({ id: Date.now().toString(), ...question });
+          saveToLocal();
+          upsertCustomClass(String(cls));
+          upsertCustomSubject(String(cls), subject);
+          showToast('Saved locally!');
+          goBack();
+        });
+      } else {
+        allQuestions.push({ id: Date.now().toString(), ...question });
+        saveToLocal();
+        upsertCustomClass(String(cls));
+        upsertCustomSubject(String(cls), subject);
+        showToast('Saved!');
+        goBack();
+      }
+    }
+
+    function getFinalQuestions() {
+      return selectedQuestions.map(id => allQuestions.find(q => q.id === id)).filter(q => q);
+    }
+
+    function previewQuestionSheet() {
+      const qs = getFinalQuestions();
+      if (qs.length === 0) { showToast('No questions!'); return; }
+      generatePDF(qs, { isPreview: true, withLines: false });
+    }
+
+    function previewLinedPaper() {
+      const qs = getFinalQuestions();
+      if (qs.length === 0) { showToast('No questions!'); return; }
+      generatePDF(qs, { isPreview: true, withLines: true });
+    }
+
+    function downloadQuestionSheet() {
+      const qs = getFinalQuestions();
+      if (qs.length === 0) { showToast('No questions!'); return; }
+      generatePDF(qs, { isPreview: false, withLines: false });
+    }
+
+    function downloadLinedPaper() {
+      const qs = getFinalQuestions();
+      if (qs.length === 0) { showToast('No questions!'); return; }
+      generatePDF(qs, { isPreview: false, withLines: true });
+    }
+
+    function generatePDF(questions, options) {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+
+      const currentLang = localStorage.getItem('eds-lang') || 'en';
+      const t = translations[currentLang] || translations.en;
+      
+      const schoolName = document.getElementById('schoolName').value;
+      const teacherName = document.getElementById('teacherName').value;
+      const testTitle = document.getElementById('testTitle').value;
+      const testTime = document.getElementById('testTime').value;
+      const totalMarks = document.getElementById('totalMarks').value;
+      const fontSize = parseInt(document.getElementById('fontSize').value);
+      const watermark = document.getElementById('watermark').value.trim();
+      const instructions = document.getElementById('instructions').value;
+      const showClass = document.getElementById('showClass').checked;
+      const showSignature = document.getElementById('showSignature').checked;
+      const shortLines = Math.max(4, parseInt(document.getElementById('shortLines').value) || 4);
+      const longLines = Math.max(50, parseInt(document.getElementById('longLines').value) || 50);
+      const enableChoices = document.getElementById('enableChoices').checked;
+      const mcqHeading = document.getElementById('mcqHeading').value || (currentLang === 'ur' ? 'سیکشن اے - MCQs' : 'Section A - MCQs');
+      const shortHeading = document.getElementById('shortHeading').value || (currentLang === 'ur' ? 'سیکشن بی - مختصر سوالات' : 'Section B - Short Questions');
+      const longHeading = document.getElementById('longHeading').value || (currentLang === 'ur' ? 'سیکشن سی - طویل سوالات' : 'Section C - Long Questions');
+      const mcqAttempt = parseInt(document.getElementById('mcqAttempt').value) || 0;
+      const shortAttempt = parseInt(document.getElementById('shortAttempt').value) || 0;
+      const longAttempt = parseInt(document.getElementById('longAttempt').value) || 0;
+      const date = new Date().toLocaleDateString(currentLang === 'ur' ? 'ur-PK' : 'en-US');
+      const withLines = options.withLines;
+
+      const left = 20;
+      const right = 190;
+      const contentWidth = right - left;
+      const lineSpacing = 6;
+      const pageBottom = 282;
+
+      const drawWatermark = () => {
+        if (!watermark) return;
+        doc.setFontSize(32);
+        doc.setTextColor(225, 225, 225);
+        doc.text(watermark, 105, 150, { angle: 45, align: 'center' });
+        doc.setTextColor(0, 0, 0);
+      };
+
+      const drawHeader = (isFirst) => {
+        let y = 20;
+        doc.setFont('helvetica', 'bold');
+        if (schoolName) {
+          doc.setFontSize(18);
+          doc.text(schoolName, 105, y, { align: 'center' });
+          y += 8;
+        }
+        doc.setFontSize(13);
+        doc.text(testTitle.toUpperCase(), 105, y, { align: 'center' });
+        y += 6;
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(10);
+        
+        const subjectLabel = currentLang === 'ur' ? 'مضمون' : 'Subject';
+        const dateLabel = currentLang === 'ur' ? 'تاریخ' : 'Date';
+        const timeLabel = currentLang === 'ur' ? 'وقت' : 'Time';
+        const marksLabel = currentLang === 'ur' ? 'نمبر' : 'Marks';
+        const classLabel = currentLang === 'ur' ? 'کلاس' : 'Class';
+        const paperLabel = currentLang === 'ur' ? 'پیپر' : 'Paper';
+        const ePaperLabel = currentLang === 'ur' ? 'ای پیپر' : 'E Paper';
+        const qsLabel = currentLang === 'ur' ? 'سوال شیٹ' : 'Question Sheet';
+        
+        let infoText = `${subjectLabel}: ${currentSubject} | ${dateLabel}: ${date} | ${timeLabel}: ${testTime} min | ${marksLabel}: ${totalMarks}`;
+        if (showClass) infoText += ` | ${classLabel}: ${currentClass}`;
+        infoText += ` | ${paperLabel}: ${withLines ? ePaperLabel : qsLabel}`;
+        doc.text(infoText, 105, y, { align: 'center' });
+        y += 8;
+
+        if (isFirst) {
+          doc.setFontSize(10);
+          const studentLabel = currentLang === 'ur' ? 'طالب علم کا نام' : 'Student Name';
+          const rollLabel = currentLang === 'ur' ? 'رول نمبر' : 'Roll No';
+          const teacherLabel = currentLang === 'ur' ? 'استاد' : 'Teacher';
+          doc.text(`${studentLabel}: ________________________________________  ${rollLabel}: ________`, left, y);
+          y += 7;
+          if (teacherName) {
+            doc.text(`${teacherLabel}: ${teacherName}`, left, y);
+            y += 6;
+          }
+          if (instructions) {
+            doc.setFontSize(9);
+            doc.setTextColor(80, 80, 80);
+            const instructionsLabel = currentLang === 'ur' ? 'ہدایات' : 'Instructions';
+            doc.text(`${instructionsLabel}: ${instructions}`, left, y);
+            doc.setTextColor(0, 0, 0);
+            y += 6;
+          }
+        }
+
+        doc.setLineWidth(0.3);
+        doc.line(left, y, right, y);
+        y += 8;
+        return y;
+      };
+
+      const ensureSpace = (currentY, needed) => {
+        if (currentY + needed <= pageBottom) return currentY;
+        doc.addPage();
+        drawWatermark();
+        return drawHeader(false);
+      };
+
+      drawWatermark();
+      let y = drawHeader(true);
+
+      doc.setFontSize(fontSize);
+      let qNum = 1;
+
+      const renderSection = (heading, sectionQuestions, attemptCount) => {
+        if (sectionQuestions.length === 0) return;
+        y = ensureSpace(y, 12);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(fontSize + 1);
+        doc.text(heading, left, y);
+        y += 6;
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(fontSize - 1);
+        if (enableChoices) {
+          const total = sectionQuestions.length;
+          const attempt = Math.min(attemptCount || total, total);
+          doc.text(`Attempt any ${attempt} out of ${total}`, left, y);
+          y += 6;
+        }
+        doc.setFontSize(fontSize);
+
+        sectionQuestions.forEach(q => {
+          const label = `Q${qNum}. ${q.type.toUpperCase()} (${q.type === 'mcq' ? 1 : q.type === 'short' ? 3 : 5} Marks)`;
+          y = ensureSpace(y, 10);
+
+          doc.setFont('helvetica', 'bold');
+          doc.text(label, left, y);
+          y += 5;
+
+          doc.setFont('helvetica', 'normal');
+          const splitText = doc.splitTextToSize(q.text, contentWidth);
+          y = ensureSpace(y, splitText.length * (fontSize * 0.45) + 4);
+          doc.text(splitText, left, y);
+          y += splitText.length * (fontSize * 0.45) + 2;
+
+          if (q.type === 'mcq' && q.options) {
+            doc.setFontSize(fontSize - 1);
+            const mcqBoxLeft = left;
+            const mcqBoxRight = right;
+            const mcqBoxTop = y;
+            const mcqRowHeight = 6;
+            
+            doc.setLineWidth(0.3);
+            doc.rect(mcqBoxLeft, mcqBoxTop, (mcqBoxRight - mcqBoxLeft), mcqRowHeight * 2);
+            doc.line(mcqBoxLeft + (mcqBoxRight - mcqBoxLeft) / 2, mcqBoxTop, mcqBoxLeft + (mcqBoxRight - mcqBoxLeft) / 2, mcqBoxTop + mcqRowHeight * 2);
+            doc.line(mcqBoxLeft, mcqBoxTop + mcqRowHeight, mcqBoxRight, mcqBoxTop + mcqRowHeight);
+            
+            doc.text(`A) ${q.options.A}`, left + 2, mcqBoxTop + 4);
+            doc.text(`B) ${q.options.B}`, left + (mcqBoxRight - mcqBoxLeft) / 2 + 2, mcqBoxTop + 4);
+            doc.text(`C) ${q.options.C}`, left + 2, mcqBoxTop + mcqRowHeight + 4);
+            doc.text(`D) ${q.options.D}`, left + (mcqBoxRight - mcqBoxLeft) / 2 + 2, mcqBoxTop + mcqRowHeight + 4);
+            
+            y += mcqRowHeight * 2 + 2;
+            doc.setFontSize(fontSize);
+          }
+
+          if (withLines && (q.type === 'short' || q.type === 'long')) {
+            const count = q.type === 'short' ? shortLines : longLines;
+            let lineY = y + 2;
+            for (let i = 0; i < count; i++) {
+              lineY = ensureSpace(lineY, lineSpacing);
+              doc.setLineWidth(0.2);
+              doc.line(left, lineY, right, lineY);
+              lineY += lineSpacing;
+            }
+            y = lineY + 2;
+          }
+
+          y += 2;
+          qNum++;
+        });
+      };
+
+      const mcqs = questions.filter(q => q.type === 'mcq');
+      const shorts = questions.filter(q => q.type === 'short');
+      const longs = questions.filter(q => q.type === 'long');
+
+      renderSection(mcqHeading, mcqs, mcqAttempt);
+      renderSection(shortHeading, shorts, shortAttempt);
+      renderSection(longHeading, longs, longAttempt);
+
+      y = ensureSpace(y, 10);
+      doc.setFontSize(9);
+      const totalLabel = currentLang === 'ur' ? 'کل سوالات' : 'Total Questions';
+      const signatureLabel = currentLang === 'ur' ? 'استاد کے دستخط' : 'Teacher Signature';
+      doc.text(`${totalLabel}: ${questions.length}`, left, y);
+      if (showSignature) {
+        doc.text(`${signatureLabel}: _____________________`, 120, y);
+      }
+      y += 6;
+
+      const fileName = `${withLines ? 'E_Paper' : 'Question_Sheet'}_${currentSubject}_Class${currentClass}_${Date.now()}.pdf`;
+      lastGeneratedPdfBlob = doc.output('blob');
+      lastGeneratedFileName = fileName;
+      const shareBtn = document.getElementById('shareWhatsAppBtn');
+      if (shareBtn) shareBtn.disabled = false;
+
+      savePaperToCloud({
+        schoolName,
+        teacherName,
+        testTitle,
+        testTime,
+        totalMarks,
+        fontSize,
+        instructions,
+        watermark,
+        showClass,
+        showSignature,
+        shortLines,
+        longLines,
+        boardPattern: {
+          enabled: enableChoices,
+          mcqHeading,
+          shortHeading,
+          longHeading,
+          mcqAttempt,
+          shortAttempt,
+          longAttempt
+        },
+        paperType: withLines ? 'e-paper' : 'question-sheet',
+        date
+      });
+
+      if (options.isPreview) {
+        window.open(doc.output('bloburl'), '_blank');
+      } else {
+        doc.save(fileName);
+        showToast('PDF downloaded!');
+      }
+    }
+
+    function downloadAnswerKey() {
+      const questions = getFinalQuestions();
+      if (questions.length === 0) { showToast('No questions!'); return; }
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      const schoolName = document.getElementById('schoolName').value;
+      const date = new Date().toLocaleDateString();
+
+      let y = 20;
+
+      if (schoolName) {
+        doc.setFontSize(16);
+        doc.setFont('helvetica', 'bold');
+        doc.text(schoolName, 105, y, { align: 'center' });
+        y += 10;
+      }
+
+      doc.setFontSize(14);
+      doc.text('ANSWER KEY', 105, y, { align: 'center' });
+      y += 8;
+
+      doc.setFontSize(10);
+      doc.text(`Subject: ${currentSubject} | Class: ${currentClass} | Date: ${date}`, 105, y, { align: 'center' });
+      y += 15;
+
+      const mcqs = questions.filter(q => q.type === 'mcq');
+      if (mcqs.length > 0) {
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'bold');
+        doc.text('MCQ Answers:', 20, y);
+        y += 8;
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'normal');
+        let line = '';
+        mcqs.forEach((q, i) => {
+          line += `Q${i+1}: ${q.correct}   `;
+          if ((i + 1) % 8 === 0) { doc.text(line, 20, y); y += 6; line = ''; }
+        });
+        if (line) { doc.text(line, 20, y); y += 10; }
+      }
+
+      const fileName = `Answer_Key_${currentSubject}_Class${currentClass}_${Date.now()}.pdf`;
+      doc.save(fileName);
+      showToast('Answer Key downloaded!');
+    }
+
+    function downloadBubbleSheet() {
+      const questions = getFinalQuestions();
+      const mcqs = questions.filter(q => q.type === 'mcq');
+      if (mcqs.length === 0) { showToast('No MCQ questions selected!'); return; }
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      const schoolName = document.getElementById('schoolName').value;
+      const testTitle = document.getElementById('testTitle').value || 'Test';
+      const date = new Date().toLocaleDateString();
+
+      let y = 20;
+
+      doc.setFontSize(16);
+      doc.setFont('helvetica', 'bold');
+      if (schoolName) { doc.text(schoolName, 105, y, { align: 'center' }); y += 8; }
+      
+      doc.setFontSize(14);
+      doc.text('OMR ANSWER SHEET', 105, y, { align: 'center' });
+      y += 6;
+      doc.setFontSize(11);
+      doc.text(`Subject: ${currentSubject} | Class: ${currentClass} | ${testTitle} | Date: ${date}`, 105, y, { align: 'center' });
+      y += 12;
+
+      doc.setFontSize(11);
+      doc.text('Student Name: ________________________________________  Roll No: ________', 20, y);
+      y += 15;
+
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Question', 25, y);
+      doc.text('A', 75, y);
+      doc.text('B', 95, y);
+      doc.text('C', 115, y);
+      doc.text('D', 135, y);
+      y += 4;
+      doc.setLineWidth(0.5);
+      doc.line(20, y, 190, y);
+      y += 4;
+
+      doc.setFont('helvetica', 'normal');
+      const questionsPerPage = 30;
+      let count = 0;
+
+      mcqs.forEach((q, i) => {
+        if (y > 270) {
+          doc.addPage();
+          y = 20;
+          doc.setFont('helvetica', 'bold');
+          doc.text('Question', 25, y);
+          doc.text('A', 75, y);
+          doc.text('B', 95, y);
+          doc.text('C', 115, y);
+          doc.text('D', 135, y);
+          y += 4;
+          doc.line(20, y, 190, y);
+          y += 4;
+          doc.setFont('helvetica', 'normal');
+        }
+
+        doc.text((i + 1) + '.', 22, y);
+        
+        doc.setDrawColor(0, 0, 0);
+        doc.setFillColor(255, 255, 255);
+        doc.circle(78, y - 1.5, 3.5, 'S');
+        doc.circle(98, y - 1.5, 3.5, 'S');
+        doc.circle(118, y - 1.5, 3.5, 'S');
+        doc.circle(138, y - 1.5, 3.5, 'S');
+
+        y += 7;
+        count++;
+      });
+
+      y += 10;
+      doc.setFontSize(9);
+      doc.text(`Total MCQs: ${mcqs.length}`, 20, y);
+      y += 6;
+      doc.text('Instructions: Fill the correct bubble completely. Use only blue/black ball point pen.', 20, y);
+      y += 5;
+      doc.text('Generated by All-in-One Document Toolkit', 105, 285, { align: 'center' });
+
+      const fileName = `Bubble_Sheet_${currentSubject}_Class${currentClass}_${Date.now()}.pdf`;
+      doc.save(fileName);
+      showToast('Bubble Sheet downloaded!');
+    }
+
+    function savePaperToCloud(settings) {
+      if (!db) { return; }
+      const payload = {
+        class: currentClass,
+        subject: currentSubject,
+        questionIds: selectedQuestions,
+        questionCount: selectedQuestions.length,
+        settings,
+        createdAt: new Date().toISOString()
+      };
+      db.collection('generatedPapers').add(payload).catch(() => {});
+    }
+
+    function shareWhatsApp() {
+      if (!lastGeneratedPdfBlob || !lastGeneratedFileName) {
+        showToast('Generate a PDF first!');
+        return;
+      }
+
+      const file = new File([lastGeneratedPdfBlob], lastGeneratedFileName, { type: 'application/pdf' });
+      const shareData = {
+        title: 'Test Paper',
+        text: `Test paper for Class ${currentClass} - ${currentSubject}`,
+        files: [file]
+      };
+
+      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+        navigator.share(shareData).catch(() => {
+          showToast('Sharing failed. Try again.');
+        });
+        return;
+      }
+
+      const message = encodeURIComponent(`Please find the test paper attached: ${lastGeneratedFileName}`);
+      window.open(`https://wa.me/?text=${message}`, '_blank');
+      showToast('WhatsApp opened. Attach the PDF to send.');
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    function updateChoiceTotals() {
+      const questions = getFinalQuestions();
+      const mcqs = questions.filter(q => q.type === 'mcq').length;
+      const shorts = questions.filter(q => q.type === 'short').length;
+      const longs = questions.filter(q => q.type === 'long').length;
+      const mcqTotal = document.getElementById('mcqTotal');
+      const shortTotal = document.getElementById('shortTotal');
+      const longTotal = document.getElementById('longTotal');
+      if (mcqTotal) mcqTotal.value = mcqs ? `${mcqs}` : '0';
+      if (shortTotal) shortTotal.value = shorts ? `${shorts}` : '0';
+      if (longTotal) longTotal.value = longs ? `${longs}` : '0';
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initFirebase();
+      const lang = localStorage.getItem('eds-lang') || 'en';
+      document.getElementById('langSelect').value = lang;
+      applyTranslations(lang);
+      const choiceToggle = document.getElementById('enableChoices');
+      const choiceOptions = document.getElementById('choiceOptions');
+      if (choiceToggle && choiceOptions) {
+        choiceToggle.addEventListener('change', () => {
+          choiceOptions.style.display = choiceToggle.checked ? 'block' : 'none';
+        });
+      }
+      updateChoiceTotals();
+    });
+
+    // Language Translations
+    const translations = {
+      en: {
+        pageTitle: 'Test Paper Generator',
+        backToHome: 'Back to Home',
+        selectClass: 'Select Class',
+        otherClass: 'Other Class',
+        enterClassName: 'Enter Class Name',
+        continue: 'Continue',
+        addQuestion: 'Add Question',
+        selectSubject: 'Select Subject',
+        otherSubject: 'Other Subject',
+        enterSubjectName: 'Enter Subject Name',
+        selectQuestions: 'Select Questions',
+        chapter: 'Chapter',
+        allChapters: 'All Chapters',
+        search: 'Search',
+        searchQuestions: 'Search questions...',
+        typeFilter: 'Type',
+        allTypes: 'All Types',
+        importantFilter: 'Important',
+        allImportant: 'All',
+        importantOnly: 'Important Only',
+        nonImportant: 'Non-Important',
+        importantQuestions: 'Important Questions',
+        autoSelectImportant: 'Auto-Select Important MCQs',
+        clearSelection: 'Clear Selection',
+        addYourOwnQuestion: 'Add Your Own Question',
+        chapterOptional: 'Chapter (Optional)',
+        questionType: 'Question Type',
+        questionText: 'Question Text',
+        correctAnswer: 'Correct Answer',
+        markImportant: 'Mark as Important',
+        saveQuestion: 'Save Question',
+        cancel: 'Cancel',
+        mcq: 'MCQ',
+        short: 'Short',
+        long: 'Long',
+        paperSettings: 'Paper Settings',
+        schoolName: 'School Name',
+        teacherName: 'Teacher Name',
+        testTitle: 'Test/Paper Title',
+        testTime: 'Test Time (minutes)',
+        totalMarks: 'Total Marks',
+        sectionSettings: 'Section Settings',
+        mcqHeading: 'MCQ Section Heading',
+        shortHeading: 'Short Questions Heading',
+        longHeading: 'Long Questions Heading',
+        attemptQuestions: 'Attempt Questions',
+        marksPerQuestion: 'Marks per Question',
+        enableChoices: 'Enable Choice Selection',
+        questionChoices: 'MCQ Choices',
+        shortChoices: 'Short Choices',
+        longChoices: 'Long Choices',
+        includeLines: 'Include Answer Lines',
+        shortLineCount: 'Short Question Lines',
+        longLineCount: 'Long Question Lines',
+        showAnswers: 'Show Answers in PDF',
+        showSignature: 'Show Teacher Signature',
+        generatePreview: 'Preview Paper',
+        downloadPdf: 'Download PDF',
+        shareWhatsApp: 'Share via WhatsApp',
+        print: 'Print',
+        selected: 'Selected',
+        questions: 'Questions',
+        totalMcqs: 'Total MCQs',
+        totalShort: 'Total Short',
+        totalLong: 'Total Long',
+        totalQuestions: 'Total Questions',
+        selectAtLeast: 'Select at least one question!',
+        noQuestions: 'No questions found!',
+        savedSuccess: 'Questions saved successfully!',
+        deletedSuccess: 'Questions deleted!',
+        downloadSuccess: 'PDF downloaded successfully!',
+        selectLanguage: 'Select Language',
+        shortQuestions: 'Short Questions',
+        longQuestions: 'Long Questions'
+      },
+      ur: {
+        pageTitle: 'ٹیسٹ پیپر جنریٹر',
+        backToHome: 'ہوم پر واپس',
+        selectClass: 'کلاس منتخب کریں',
+        otherClass: 'دوسری کلاس',
+        enterClassName: 'کلاس کا نام درج کریں',
+        continue: 'جاری رکھیں',
+        addQuestion: 'سوال شامل کریں',
+        selectSubject: 'مضمون منتخب کریں',
+        otherSubject: 'دوسرا مضمون',
+        enterSubjectName: 'مضمون کا نام درج کریں',
+        selectQuestions: 'سوالات منتخب کریں',
+        chapter: 'باب',
+        allChapters: 'تمام ابواب',
+        search: 'تلاش',
+        searchQuestions: 'سوالات تلاش کریں...',
+        typeFilter: 'قسم',
+        allTypes: 'تمام اقسام',
+        importantFilter: 'اہم',
+        allImportant: 'تمام',
+        importantOnly: 'اہم صرف',
+        nonImportant: 'غیر اہم',
+        importantQuestions: 'اہم سوالات',
+        autoSelectImportant: 'اہم MCQs خود منتخب کریں',
+        clearSelection: 'انتخاب صاف کریں',
+        addYourOwnQuestion: 'اپنا سوال شامل کریں',
+        chapterOptional: 'باب (اختیاری)',
+        questionType: 'سوال کی قسم',
+        questionText: 'سوال کا متن',
+        correctAnswer: 'درست جواب',
+        markImportant: 'اہم کے طور پر نشان زد کریں',
+        saveQuestion: 'سوال محفوظ کریں',
+        cancel: 'منسوخ کریں',
+        mcq: 'MCQ',
+        short: 'مختصر',
+        long: 'طویل',
+        paperSettings: 'پیپر کی ترتیبات',
+        schoolName: 'اسکول کا نام',
+        teacherName: 'استاد کا نام',
+        testTitle: 'ٹیسٹ/پیپر کا عنوان',
+        testTime: 'ٹیسٹ کا وقت (منٹ)',
+        totalMarks: 'کل نمبر',
+        sectionSettings: 'سیکشن کی ترتیبات',
+        mcqHeading: 'MCQ سیکشن کا عنوان',
+        shortHeading: 'مختصر سوالات کا عنوان',
+        longHeading: 'طویل سوالات کا عنوان',
+        attemptQuestions: 'سوالات حل کریں',
+        marksPerQuestion: 'فی سوال نمبر',
+        enableChoices: 'چوائس سیلیکشن آن',
+        questionChoices: 'MCQ چوائسز',
+        shortChoices: 'مختصر چوائسز',
+        longChoices: 'طویل چوائسز',
+        includeLines: 'جواب کی لائنز شامل کریں',
+        shortLineCount: 'مختصر سوال لائنز',
+        longLineCount: 'طویل سوال لائنز',
+        showAnswers: 'جوابات PDF میں دکھائیں',
+        showSignature: 'استاد کے دستخط دکھائیں',
+        generatePreview: 'پیپر دیکھیں',
+        downloadPdf: 'PDF ڈاؤنلوڈ کریں',
+        shareWhatsApp: 'واٹس ایپ پر شیئر کریں',
+        print: 'پرنٹ کریں',
+        selected: 'منتخب',
+        questions: 'سوالات',
+        totalMcqs: 'کل MCQs',
+        totalShort: 'کل مختصر',
+        totalLong: 'کل طویل',
+        totalQuestions: 'کل سوالات',
+        selectAtLeast: 'کم از کم ایک سوال منتخب کریں!',
+        noQuestions: 'کوئی سوالات نہیں ملے!',
+        savedSuccess: 'سوالات کامیابی سے محفوظ ہو گئے!',
+        deletedSuccess: 'سوالات حذف ہو گئے!',
+        downloadSuccess: 'PDF کامیابی سے ڈاؤنلوڈ ہو گیا!',
+        selectLanguage: 'زبان منتخب کریں',
+        shortQuestions: 'مختصر سوالات',
+        longQuestions: 'طویل سوالات'
+      }
+    };
+
+    function applyTranslations(lang) {
+      const t = translations[lang] || translations.en;
+      
+      // Update text content
+      const elements = {
+        'pageTitle': t.pageTitle,
+        'subjectTitle': `${t.selectSubject} - Class ${currentClass || ''}`,
+        'questionsTitle': t.selectQuestions
+      };
+      
+      // Update main elements
+      document.querySelectorAll('[data-trans]').forEach(el => {
+        const key = el.getAttribute('data-trans');
+        if (t[key]) el.textContent = t[key];
+      });
+      
+      // Update labels
+      document.querySelectorAll('label').forEach(label => {
+        const text = label.textContent.trim();
+        if (text === 'School Name' || text === 'اسکول کا نام') label.textContent = t.schoolName;
+        if (text === 'Teacher Name' || text === 'استاد کا نام') label.textContent = t.teacherName;
+        if (text === 'Test/Paper Title' || text === 'ٹیسٹ/پیپر کا عنوان') label.textContent = t.testTitle;
+        if (text === 'Test Time (minutes)' || text === 'ٹیسٹ کا وقت (منٹ)') label.textContent = t.testTime;
+        if (text === 'Total Marks' || text === 'کل نمبر') label.textContent = t.totalMarks;
+        if (text === 'Chapter' || text === 'باب') label.textContent = t.chapter;
+        if (text === 'Search' || text === 'تلاش') label.textContent = t.search;
+        if (text === 'Type' || text === 'قسم') label.textContent = t.typeFilter;
+        if (text === 'Important' || text === 'اہم') label.textContent = t.importantFilter;
+      });
+      
+      // Update placeholders
+      document.querySelectorAll('input[placeholder]').forEach(input => {
+        const ph = input.placeholder;
+        if (ph === 'Search questions...') input.placeholder = t.searchQuestions;
+        if (ph === 'e.g., Biology, Statistics' || ph === 'e.g., Biology, Statistics') input.placeholder = t.enterSubjectName;
+        if (ph === 'e.g., Nursery, UKG, BBA, MBA' || ph === 'e.g., Nursery, UKG, BBA, MBA') input.placeholder = t.enterClassName;
+      });
+      
+      // Update buttons
+      document.querySelectorAll('button').forEach(btn => {
+        const text = btn.textContent.trim();
+        if (text === 'Auto-Select Important MCQs') btn.textContent = t.autoSelectImportant;
+        if (text === 'Clear Selection') btn.textContent = t.clearSelection;
+        if (text === 'Add Your Own Question' || text === '➕ Add Your Own Question') btn.textContent = '➕ ' + t.addYourOwnQuestion;
+      });
+      
+      // Update select options
+      const chapterSelect = document.getElementById('chapterSelect');
+      if (chapterSelect) {
+        chapterSelect.options[0].text = t.allChapters;
+      }
+      
+      const typeFilter = document.getElementById('typeFilter');
+      if (typeFilter) {
+        typeFilter.options[0].text = t.allTypes;
+      }
+      
+      const importantFilter = document.getElementById('importantFilter');
+      if (importantFilter) {
+        importantFilter.options[0].text = t.allImportant;
+        importantFilter.options[1].text = t.importantOnly;
+        importantFilter.options[2].text = t.nonImportant;
+      }
+      
+      // Update MCQ heading
+      const mcqHeading = document.getElementById('mcqHeading');
+      if (mcqHeading) mcqHeading.value = t.mcqHeading;
+      
+      // Update selected count
+      const selectedCount = document.getElementById('selectedCount');
+      if (selectedCount) {
+        selectedCount.textContent = `${t.selected}: ${selectedQuestions.length} ${t.questions}`;
+      }
+    }
+
+    document.getElementById('langSelect').addEventListener('change', function() {
+      const lang = this.value;
+      localStorage.setItem('eds-lang', lang);
+      applyTranslations(lang);
+    });
+  </script>
+</body>
+</html>
