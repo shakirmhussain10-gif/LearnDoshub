@@ -1,0 +1,200 @@
+<!-- 
+  LearnDocs Hub - SEO Head Template
+  Use this template for all HTML pages to ensure consistent SEO
+  Replace [PAGE_NAME], [TITLE], [DESCRIPTION], etc. with actual content
+-->
+
+<head>
+  <meta charset="UTF-8">
+  
+  <!-- Primary Meta Tags -->
+  <title>[TITLE] | LearnDocs Hub</title>
+  <meta name="title" content="[TITLE] | LearnDocs Hub">
+  <meta name="description" content="[DESCRIPTION - 150-160 characters]">
+  <meta name="keywords" content="[KEYWORD1], [KEYWORD2], [KEYWORD3], [KEYWORD4]">
+  <meta name="author" content="Muhammad Hussain Shakir">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <meta name="theme-color" content="#6366f1">
+  <meta name="language" content="English">
+  <meta name="revisit-after" content="7 days">
+  <meta name="distribution" content="global">
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://learndocs-hub.com/[PAGE_NAME].html">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="[SHORT_TITLE]">
+  <meta property="og:description" content="[SHORT_DESCRIPTION - 95-100 characters]">
+  <meta property="og:url" content="https://learndocs-hub.com/[PAGE_NAME].html">
+  <meta property="og:site_name" content="LearnDocs Hub">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:image" content="https://learndocs-hub.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="[SHORT_TITLE]">
+  <meta name="twitter:description" content="[SHORT_DESCRIPTION - 95-100 characters]">
+  <meta name="twitter:image" content="https://learndocs-hub.com/og-image.png">
+  <meta name="twitter:creator" content="@shakirhussain12">
+  <meta name="twitter:site" content="@shakirhussain12">
+  
+  <!-- Schema.org Structured Data - Breadcrumb Navigation -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://learndocs-hub.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Tools",
+        "item": "https://learndocs-hub.com/#tools"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "[PAGE_NAME]",
+        "item": "https://learndocs-hub.com/[PAGE_NAME].html"
+      }
+    ]
+  }
+  </script>
+  
+  <!-- Schema.org Structured Data - Web Page -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": "https://learndocs-hub.com/[PAGE_NAME].html",
+    "name": "[TITLE]",
+    "description": "[DESCRIPTION]",
+    "url": "https://learndocs-hub.com/[PAGE_NAME].html",
+    "isPartOf": {
+      "@id": "https://learndocs-hub.com/#website"
+    },
+    "inLanguage": "en-US",
+    "datePublished": "2026-04-28T00:00:00Z",
+    "dateModified": "2026-04-28T00:00:00Z",
+    "image": {
+      "@type": "ImageObject",
+      "url": "https://learndocs-hub.com/og-image.png",
+      "width": 1200,
+      "height": 630
+    }
+  }
+  </script>
+  
+  <!-- Schema.org - Software Application (for tool pages) -->
+  <!-- ONLY USE FOR TOOL PAGES -->
+  <!--
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "[TOOL_NAME]",
+    "description": "[TOOL_DESCRIPTION]",
+    "url": "https://learndocs-hub.com/[PAGE_NAME].html",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "ratingCount": "1000+"
+    }
+  }
+  </script>
+  -->
+  
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-FG6LEW3P8C"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-FG6LEW3P8C');
+  </script>
+  
+  <!-- PWA Meta Tags -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="LearnDocs Hub">
+  <meta name="application-name" content="LearnDocs Hub">
+  <meta name="msapplication-TileColor" content="#6366f1">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<!-- 
+  IMPLEMENTATION GUIDE:
+  
+  1. Replace all placeholders:
+     - [TITLE]: Full page title (50-60 characters max)
+     - [DESCRIPTION]: Meta description (150-160 characters max)
+     - [SHORT_TITLE]: Title for social media (40-50 characters)
+     - [SHORT_DESCRIPTION]: Description for social media (95-100 characters)
+     - [KEYWORD1-4]: Main keywords (4 most important)
+     - [PAGE_NAME]: HTML filename without extension
+     - [TOOL_NAME]: Only for tool pages
+     - [TOOL_DESCRIPTION]: Only for tool pages
+  
+  2. For tool pages only:
+     - Uncomment the "SoftwareApplication" schema block
+     - Fill in tool-specific information
+  
+  3. Update OG image if different per page:
+     - og:image should be 1200x630px
+     - Use: /og-image.png (default) or create page-specific image
+  
+  EXAMPLE - PDF Tools Page:
+  
+  <title>Free PDF Tools - Merge, Split, Compress & Edit | LearnDocs Hub</title>
+  <meta name="description" content="Free online PDF tools to merge, split, compress, convert to Word/Image, watermark, protect, unlock, and rotate PDFs. No uploads needed - 100% browser-based processing.">
+  <meta name="keywords" content="PDF merge, PDF split, PDF compress, free PDF tools, online PDF editor">
+  
+  [TITLE] = "Free PDF Tools - Merge, Split, Compress & Edit"
+  [DESCRIPTION] = "Free online PDF tools to merge, split, compress, convert to Word/Image, watermark, protect, unlock, and rotate PDFs. No uploads needed - 100% browser-based processing."
+  [SHORT_TITLE] = "Free PDF Tools - Merge & Compress"
+  [SHORT_DESCRIPTION] = "Professional PDF tools: merge, split, compress, convert formats. Free and secure."
+  [PAGE_NAME] = "pdf-tools"
+  
+  KEYWORD RESEARCH TIPS:
+  - Use Google Keyword Planner for search volume
+  - Check current top 10 rankings for your keywords
+  - Use long-tail keywords (3-4 word phrases) for better targeting
+  - Include tool-specific terms: "free", "online", "no registration"
+  
+  CHARACTER COUNTS:
+  - Title: 50-60 characters (appears in search results)
+  - Meta Description: 150-160 characters (appears in search results)
+  - OG Title: 40-50 characters (appears on social media)
+  - OG Description: 95-100 characters (appears on social media)
+  
+  TESTING:
+  1. Meta Tags: Use preview tools like MetaTag.io
+  2. Schema Markup: Use schema.org validator
+  3. Mobile Preview: Use Google Mobile-Friendly Test
+  4. Open Graph: Use Facebook Sharing Debugger
+  5. Twitter Card: Use Twitter Card Validator
+-->
