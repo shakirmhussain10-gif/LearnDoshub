@@ -50,7 +50,13 @@
   </url>
   
   <url>
-    <loc>https://learndocs-hub.com/social-tools.html</loc>
+    <loc>https://learndocs-hub.com/popular-tools.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://learndocs-hub.com/lecture-videos.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

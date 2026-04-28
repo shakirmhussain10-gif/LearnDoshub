@@ -1,18 +1,37 @@
+# LearnDocs Hub - SEO Optimized Robots Configuration
+
+# Default rules for all bots
 User-agent: *
 Allow: /
 
-Sitemap: https://learndocs-hub.com/sitemap.xml
+# Increase crawl rate for major search engines
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
 
-# Disallow admin pages
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 1
+
+# Disallow admin and internal pages
+User-agent: *
 Disallow: /admin.html
 Disallow: /firebase-admin.html
 Disallow: /edit-links.html
 Disallow: /set-links.html
 Disallow: /test-affiliate.html
 Disallow: /app-icons.html
+Disallow: /temp.txt
+Disallow: /VERSION
 
-# Allow all tools
+# Specifically allow important tool pages (redundant but explicit for clarity)
+User-agent: *
 Allow: /pdf-tools.html
+Allow: /pdf-editor.html
 Allow: /image-tools.html
 Allow: /text-tools.html
 Allow: /audio-tools.html
@@ -22,3 +41,19 @@ Allow: /social-tools.html
 Allow: /calculators.html
 Allow: /chat.html
 Allow: /test-paper-generator.html
+Allow: /lecture-videos.html
+Allow: /popular-tools.html
+
+# Allow public pages
+User-agent: *
+Allow: /about.html
+Allow: /contact.html
+Allow: /faq.html
+Allow: /blog.html
+Allow: /privacy.html
+Allow: /terms.html
+
+# Sitemaps
+Sitemap: https://learndocs-hub.com/sitemap.xml
+Sitemap: https://learndocs-hub.com/sitemap-tools.xml
+Sitemap: https://learndocs-hub.com/sitemap-blog.xml
