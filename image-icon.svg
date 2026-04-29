@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="imgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0ea5e9"/>
+      <stop offset="100%" style="stop-color:#0284c7"/>
+    </linearGradient>
+  </defs>
+  <circle cx="100" cy="100" r="95" fill="url(#imgGrad)"/>
+  <!-- Image frame -->
+  <rect x="55" y="50" width="90" height="100" fill="white" opacity="0.95" rx="8"/>
+  <!-- Image elements -->
+  <circle cx="75" cy="70" r="12" fill="#0ea5e9"/>
+  <path d="M55 130 L90 80 L130 120 L145 110" stroke="#0ea5e9" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- Creator mark -->
+  <circle cx="160" cy="30" r="18" fill="white" opacity="0.9"/>
+  <text x="160" y="38" font-size="9" font-weight="bold" fill="#0ea5e9" text-anchor="middle">MHS</text>
+</svg>
