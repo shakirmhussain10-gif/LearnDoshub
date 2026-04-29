@@ -31,6 +31,33 @@
   "lang": "en",
   "dir": "ltr",
   "scope": "/",
+  "file_handlers": [
+    {
+      "action": "/pdf-editor.html",
+      "accept": {
+        "application/pdf": [".pdf"]
+      },
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%23ef4444' width='192' height='192' rx='16'/><text x='96' y='130' font-size='80' font-weight='bold' fill='white' text-anchor='middle'>PDF</text></svg>",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "share_target": {
+    "action": "/pdf-editor.html",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "files": [
+        {
+          "name": "pdf",
+          "accept": ["application/pdf", ".pdf"]
+        }
+      ]
+    }
+  },
   "prefer_related_applications": false,
   "shortcuts": [
     {

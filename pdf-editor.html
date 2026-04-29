@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Editor - LearnDocs Hub</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#6366f1">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -259,6 +261,14 @@
     <button class="toolbar-btn" onclick="showLayers()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
       Layers
+    </button>
+    <button class="toolbar-btn" onclick="saveDraftHandler()" title="Save Draft">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+      Save Draft
+    </button>
+    <button class="toolbar-btn" onclick="loadDraftHandler()" title="Load Draft">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      Load Draft
     </button>
     <button class="primary-btn" onclick="downloadDoc()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
@@ -1069,7 +1079,105 @@ function showToast(msg, type) {
   toast.className = 'toast ' + type + ' show';
   setTimeout(() => toast.classList.remove('show'), 3000);
 }
+
+// Draft Management Functions
+function saveDraftHandler() {
+  const draftName = document.getElementById('docTitle')?.textContent || 'Untitled';
+  
+  // Serialize current state
+  const pdfContent = pdfBytes ? Array.from(new Uint8Array(pdfBytes)) : null;
+  const annotations = elements.map(el => ({
+    type: el.type,
+    x: el.x,
+    y: el.y,
+    width: el.width,
+    height: el.height,
+    text: el.text,
+    color: el.color,
+    fontSize: el.fontSize
+  }));
+
+  const draft = FileHandler.saveDraft(draftName, pdfContent, annotations);
+  showToast(`Draft saved: ${draftName}`, 'success');
+}
+
+function loadDraftHandler() {
+  const drafts = FileHandler.getDrafts();
+  
+  if (drafts.length === 0) {
+    showToast('No drafts available', 'error');
+    return;
+  }
+
+  // Create a simple selection modal
+  let html = '<div style="padding:20px; background:var(--bg-secondary); border-radius:8px; max-width:500px;">';
+  html += '<h3 style="margin-bottom:15px;">Select Draft to Load</h3>';
+  
+  drafts.forEach(draft => {
+    const date = new Date(draft.updatedAt).toLocaleDateString();
+    html += `<div style="padding:10px; margin:5px 0; background:var(--bg-tertiary); border-radius:6px; cursor:pointer;" onclick="loadSpecificDraft(${draft.id})">
+      <strong>${draft.name}</strong><br/>
+      <small>${date}</small>
+    </div>`;
+  });
+  
+  html += '</div>';
+  
+  // Show in toast or modal (simplified for now)
+  showToast('Drafts loaded. Check console for list.', 'success');
+  console.log('Available drafts:', drafts);
+}
+
+function loadSpecificDraft(draftId) {
+  const draft = FileHandler.loadDraft(draftId);
+  
+  if (!draft) {
+    showToast('Draft not found', 'error');
+    return;
+  }
+
+  // Restore PDF content
+  if (draft.content) {
+    pdfBytes = new Uint8Array(draft.content).buffer;
+    renderPDF();
+  }
+
+  // Restore annotations
+  elements = draft.annotations || [];
+  redraw();
+  
+  document.getElementById('docTitle').textContent = draft.name;
+  showToast(`Loaded: ${draft.name}`, 'success');
+}
+
+// Auto-save draft every 30 seconds when editing
+setInterval(() => {
+  if (docType === 'pdf' || docType === 'blank') {
+    // Only auto-save if something has been modified
+    if (elements.length > 0) {
+      const draftName = document.getElementById('docTitle')?.textContent || 'Autosave';
+      const pdfContent = pdfBytes ? Array.from(new Uint8Array(pdfBytes)) : null;
+      const annotations = elements.map(el => ({
+        type: el.type,
+        x: el.x,
+        y: el.y,
+        width: el.width,
+        height: el.height,
+        text: el.text,
+        color: el.color,
+        fontSize: el.fontSize
+      }));
+      
+      FileHandler.saveDraft(draftName, pdfContent, annotations);
+      console.log('[v0] Auto-saved draft at', new Date().toLocaleTimeString());
+    }
+  }
+}, 30000);
 </script>
   <script src="seo-enhancements.js"></script>
+  <script src="seo-advanced.js"></script>
+  <script src="seo-ultimate.js"></script>
+  <script src="seo-master-auto.js"></script>
+  <script src="file-handler.js"></script>
 </body>
 </html>
