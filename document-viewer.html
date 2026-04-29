@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Document Viewer - LearnDocs Hub</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#6366f1">
+  <link rel="canonical" href="https://learn-doshub.vercel.app/document-viewer.html">
+  <meta name="description" content="Universal document viewer for PDF, images, text files and more. Open any document from WhatsApp, Email or File Manager.">
+  <meta name="keywords" content="document viewer, PDF viewer, file viewer, universal document viewer, mobile document viewer">
+  <meta property="og:title" content="Universal Document Viewer - LearnDocs Hub">
+  <meta property="og:description" content="Open any document from WhatsApp, Email, or File Manager. Perfect for mobile viewing.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://learn-doshub.vercel.app/document-viewer.html">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .viewer-container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      background: #1e293b;
+    }
+
+    /* Header */
+    .viewer-header {
+      background: #334155;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #475569;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .back-btn {
+      background: none;
+      border: none;
+      color: #e2e8f0;
+      cursor: pointer;
+      font-size: 24px;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .doc-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #e2e8f0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 70%;
+    }
+
+    .header-right {
+      display: flex;
+      gap: 8px;
+    }
+
+    .header-btn {
+      background: #475569;
+      border: none;
+      color: #e2e8f0;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .header-btn:active {
+      background: #64748b;
+    }
+
+    /* Upload Area */
+    .upload-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 20px;
+      text-align: center;
+      background: #1e293b;
+    }
+
+    .upload-area.hidden {
+      display: none;
+    }
+
+    .upload-icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+      opacity: 0.6;
+    }
+
+    .upload-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #e2e8f0;
+    }
+
+    .upload-desc {
+      font-size: 14px;
+      color: #cbd5e1;
+      margin-bottom: 24px;
+    }
+
+    .upload-btn {
+      background: #6366f1;
+      border: none;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-bottom: 16px;
+      transition: background 0.3s;
+    }
+
+    .upload-btn:active {
+      background: #4f46e5;
+    }
+
+    .drop-zone {
+      border: 2px dashed #475569;
+      border-radius: 12px;
+      padding: 40px 20px;
+      background: rgba(99, 102, 241, 0.05);
+      transition: all 0.3s;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .drop-zone.drag-over {
+      border-color: #6366f1;
+      background: rgba(99, 102, 241, 0.15);
+    }
+
+    /* Document Display */
+    .document-display {
+      flex: 1;
+      overflow: auto;
+      background: #0f172a;
+      position: relative;
+    }
+
+    .document-display.hidden {
+      display: none;
+    }
+
+    #pdfCanvas {
+      display: block;
+      margin: auto;
+      width: 100%;
+      height: auto;
+      background: white;
+    }
+
+    .document-content {
+      padding: 16px;
+      word-break: break-word;
+      white-space: pre-wrap;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    img.document-image {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: auto;
+    }
+
+    /* Controls */
+    .controls {
+      background: #334155;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      border-top: 1px solid #475569;
+      flex-wrap: wrap;
+    }
+
+    .controls.hidden {
+      display: none;
+    }
+
+    .page-info {
+      font-size: 12px;
+      color: #cbd5e1;
+    }
+
+    .control-btn {
+      background: #475569;
+      border: none;
+      color: #e2e8f0;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .control-btn:active {
+      background: #64748b;
+    }
+
+    /* Loading */
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      gap: 8px;
+      color: #cbd5e1;
+    }
+
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 3px solid #475569;
+      border-top-color: #6366f1;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .viewer-header {
+        padding: 10px 12px;
+      }
+
+      .doc-title {
+        font-size: 12px;
+        max-width: 60%;
+      }
+
+      .header-btn {
+        padding: 6px 10px;
+        font-size: 11px;
+      }
+
+      .upload-title {
+        font-size: 18px;
+      }
+
+      .page-info {
+        font-size: 11px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="viewer-container">
+    <!-- Header -->
+    <div class="viewer-header">
+      <div class="header-left">
+        <button class="back-btn" onclick="goBack()" title="Go back">
+          ← 
+        </button>
+        <span class="doc-title" id="docTitle">Document Viewer</span>
+      </div>
+      <div class="header-right">
+        <button class="header-btn" id="downloadBtn" onclick="downloadDocument()" style="display:none;">Download</button>
+        <button class="header-btn" onclick="location.href='/'">Home</button>
+      </div>
+    </div>
+
+    <!-- Upload Area -->
+    <div class="upload-area" id="uploadArea">
+      <div class="upload-icon">📄</div>
+      <div class="upload-title">Open Document</div>
+      <div class="upload-desc">Upload PDF, Images, Text Files or any document</div>
+      <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+        Choose File
+      </button>
+      <div class="drop-zone" id="dropZone">
+        <div style="color: #cbd5e1; font-size: 14px;">
+          Or drag and drop your file here
+        </div>
+      </div>
+      <input type="file" id="fileInput" style="display:none;" accept=".pdf,.jpg,.jpeg,.png,.txt,.doc,.docx,.xls,.xlsx,.gif,.bmp,.svg,.webp">
+    </div>
+
+    <!-- Document Display -->
+    <div class="document-display" id="documentDisplay">
+      <div id="documentContent"></div>
+      <canvas id="pdfCanvas" style="display:none;"></canvas>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls" id="controls">
+      <div class="page-info" id="pageInfo">Ready</div>
+      <div style="display: flex; gap: 8px;">
+        <button class="control-btn" id="prevBtn" onclick="previousPage()" style="display:none;">← Previous</button>
+        <input type="number" id="pageInput" min="1" style="width:50px; padding:6px; border-radius:6px; border:1px solid #475569; background:#334155; color:#e2e8f0; text-align:center;" onchange="goToPage(this.value)" style="display:none;">
+        <button class="control-btn" id="nextBtn" onclick="nextPage()" style="display:none;">Next →</button>
+        <button class="control-btn" id="zoomInBtn" onclick="zoomIn()" style="display:none;">🔍+</button>
+        <button class="control-btn" id="zoomOutBtn" onclick="zoomOut()" style="display:none;">🔍−</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
+  
+  <script>
+    // PDF.js setup
+    if (typeof pdfjsLib !== 'undefined') {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
+
+    let currentFile = null;
+    let pdfDoc = null;
+    let currentPage = 1;
+    let totalPages = 0;
+    let zoomLevel = 1;
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      setupDragDrop();
+      handleURLParams();
+      setupFileInput();
+      console.log('[DocumentViewer] Universal Document Viewer Initialized');
+    });
+
+    // Setup drag and drop
+    function setupDragDrop() {
+      const dropZone = document.getElementById('dropZone');
+      
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, preventDefaults, false);
+      });
+
+      function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      dropZone.addEventListener('dragover', () => {
+        dropZone.classList.add('drag-over');
+      });
+
+      dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('drag-over');
+      });
+
+      dropZone.addEventListener('drop', (e) => {
+        dropZone.classList.remove('drag-over');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+          handleFileUpload(files[0]);
+        }
+      });
+    }
+
+    // Setup file input
+    function setupFileInput() {
+      const fileInput = document.getElementById('fileInput');
+      fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+          handleFileUpload(e.target.files[0]);
+        }
+      });
+    }
+
+    // Handle file upload
+    function handleFileUpload(file) {
+      currentFile = file;
+      const ext = file.name.split('.').pop().toLowerCase();
+      
+      document.getElementById('docTitle').textContent = file.name;
+      document.getElementById('uploadArea').classList.add('hidden');
+      document.getElementById('documentDisplay').classList.remove('hidden');
+      document.getElementById('downloadBtn').style.display = 'block';
+      
+      if (ext === 'pdf') {
+        loadPDF(file);
+      } else if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'webp'].includes(ext)) {
+        loadImage(file);
+      } else if (['txt', 'log', 'csv', 'json', 'xml', 'html', 'css', 'js'].includes(ext)) {
+        loadText(file);
+      } else {
+        document.getElementById('documentContent').innerHTML = '<div style="padding: 20px; text-align: center; color: #cbd5e1;">File type not supported for preview. You can still download it.</div>';
+      }
+    }
+
+    // Load PDF
+    async function loadPDF(file) {
+      try {
+        const arrayBuffer = await file.arrayBuffer();
+        pdfDoc = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        totalPages = pdfDoc.numPages;
+        document.getElementById('controls').classList.remove('hidden');
+        document.getElementById('pageInput').style.display = 'inline';
+        document.getElementById('pageInput').max = totalPages;
+        document.getElementById('prevBtn').style.display = 'inline';
+        document.getElementById('nextBtn').style.display = 'inline';
+        document.getElementById('zoomInBtn').style.display = 'inline';
+        document.getElementById('zoomOutBtn').style.display = 'inline';
+        renderPDFPage(1);
+      } catch (error) {
+        console.error('[DocumentViewer] PDF Error:', error);
+        document.getElementById('documentContent').innerHTML = '<div style="padding: 20px; color: #ef4444;">Error loading PDF. Try another file.</div>';
+      }
+    }
+
+    // Render PDF page
+    async function renderPDFPage(pageNum) {
+      try {
+        const page = await pdfDoc.getPage(pageNum);
+        const canvas = document.getElementById('pdfCanvas');
+        canvas.style.display = 'block';
+        
+        const viewport = page.getViewport({ scale: 1.5 * zoomLevel });
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        
+        const context = canvas.getContext('2d');
+        await page.render({ canvasContext: context, viewport: viewport }).promise;
+        
+        currentPage = pageNum;
+        document.getElementById('pageInput').value = pageNum;
+        document.getElementById('pageInfo').textContent = `Page ${pageNum} of ${totalPages}`;
+      } catch (error) {
+        console.error('[DocumentViewer] Render Error:', error);
+      }
+    }
+
+    // Load Image
+    function loadImage(file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        img.className = 'document-image';
+        document.getElementById('documentContent').innerHTML = '';
+        document.getElementById('documentContent').appendChild(img);
+        document.getElementById('pageInfo').textContent = 'Image loaded';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Load Text
+    function loadText(file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const text = e.target.result;
+        const pre = document.createElement('pre');
+        pre.className = 'document-content';
+        pre.textContent = text.substring(0, 50000);
+        if (text.length > 50000) {
+          pre.textContent += '\n\n... (File too large, showing first 50KB) ...';
+        }
+        document.getElementById('documentContent').innerHTML = '';
+        document.getElementById('documentContent').appendChild(pre);
+        document.getElementById('pageInfo').textContent = `Text file (${(file.size / 1024).toFixed(2)} KB)`;
+      };
+      reader.readAsText(file);
+    }
+
+    // Page controls
+    function previousPage() {
+      if (currentPage > 1) {
+        renderPDFPage(currentPage - 1);
+      }
+    }
+
+    function nextPage() {
+      if (currentPage < totalPages) {
+        renderPDFPage(currentPage + 1);
+      }
+    }
+
+    function goToPage(pageNum) {
+      const num = parseInt(pageNum);
+      if (num >= 1 && num <= totalPages) {
+        renderPDFPage(num);
+      }
+    }
+
+    function zoomIn() {
+      if (pdfDoc && zoomLevel < 3) {
+        zoomLevel += 0.5;
+        renderPDFPage(currentPage);
+      }
+    }
+
+    function zoomOut() {
+      if (pdfDoc && zoomLevel > 0.5) {
+        zoomLevel -= 0.5;
+        renderPDFPage(currentPage);
+      }
+    }
+
+    // Download
+    function downloadDocument() {
+      if (currentFile) {
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(currentFile);
+        link.download = currentFile.name;
+        link.click();
+      }
+    }
+
+    // Navigation
+    function goBack() {
+      history.back();
+    }
+
+    // Handle URL parameters (for shared files)
+    function handleURLParams() {
+      const params = new URLSearchParams(window.location.search);
+      if (params.has('file')) {
+        const fileData = params.get('file');
+        if (fileData) {
+          console.log('[DocumentViewer] Opening shared file from URL parameter');
+        }
+      }
+    }
+
+    // Web Share API support
+    if (navigator.canShare) {
+      window.shareDocument = function() {
+        if (currentFile) {
+          navigator.share({
+            title: currentFile.name,
+            text: 'Check out this document',
+            files: [currentFile]
+          }).catch(err => console.log('Share failed:', err));
+        }
+      };
+    }
+  </script>
+
+  <script src="seo-enhancements.js"></script>
+  <script src="seo-advanced.js"></script>
+  <script src="seo-ultimate.js"></script>
+  <script src="seo-master-auto.js"></script>
+</body>
+</html>

@@ -33,6 +33,24 @@
   "scope": "/",
   "file_handlers": [
     {
+      "action": "/document-viewer.html",
+      "accept": {
+        "application/pdf": [".pdf"],
+        "image/*": [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".svg", ".webp"],
+        "text/*": [".txt", ".csv", ".json", ".xml", ".html", ".css", ".js", ".log"],
+        "application/msword": [".doc"],
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"],
+        "application/vnd.ms-excel": [".xls"],
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [".xlsx"]
+      },
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%236366f1' width='192' height='192' rx='16'/><text x='96' y='110' font-size='60' font-weight='bold' fill='white' text-anchor='middle'>Doc</text></svg>",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
       "action": "/pdf-editor.html",
       "accept": {
         "application/pdf": [".pdf"]
@@ -46,14 +64,14 @@
     }
   ],
   "share_target": {
-    "action": "/pdf-editor.html",
+    "action": "/document-viewer.html",
     "method": "POST",
     "enctype": "multipart/form-data",
     "params": {
       "files": [
         {
-          "name": "pdf",
-          "accept": ["application/pdf", ".pdf"]
+          "name": "document",
+          "accept": ["application/pdf", ".pdf", "image/*", ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".svg", ".webp", "text/*", ".txt", ".csv", ".json", ".xml", ".html", ".css", ".js", ".log", "application/msword", ".doc", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", ".docx", "application/vnd.ms-excel", ".xls", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ".xlsx"]
         }
       ]
     }

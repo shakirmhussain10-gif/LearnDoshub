@@ -43,6 +43,7 @@ Allow: /chat.html
 Allow: /test-paper-generator.html
 Allow: /lecture-videos.html
 Allow: /popular-tools.html
+Allow: /document-viewer.html
 
 # Allow public pages
 User-agent: *
