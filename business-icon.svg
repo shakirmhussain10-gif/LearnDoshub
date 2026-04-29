@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="busGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f59e0b"/>
+      <stop offset="100%" style="stop-color:#d97706"/>
+    </linearGradient>
+  </defs>
+  <circle cx="100" cy="100" r="95" fill="url(#busGrad)"/>
+  <!-- Building shape -->
+  <rect x="55" y="60" width="90" height="95" fill="white" opacity="0.95" rx="4"/>
+  <!-- Windows grid -->
+  <rect x="65" y="70" width="15" height="15" fill="#f59e0b" opacity="0.6"/>
+  <rect x="85" y="70" width="15" height="15" fill="#f59e0b" opacity="0.6"/>
+  <rect x="105" y="70" width="15" height="15" fill="#f59e0b" opacity="0.6"/>
+  <rect x="65" y="95" width="15" height="15" fill="#f59e0b" opacity="0.6"/>
+  <rect x="85" y="95" width="15" height="15" fill="#f59e0b" opacity="0.6"/>
+  <rect x="105" y="95" width="15" height="15" fill="#f59e0b" opacity="0.6"/>
+  <rect x="65" y="120" width="15" height="15" fill="#f59e0b" opacity="0.6"/>
+  <rect x="85" y="120" width="15" height="15" fill="#f59e0b" opacity="0.6"/>
+  <rect x="105" y="120" width="15" height="15" fill="#f59e0b" opacity="0.6"/>
+  <!-- Creator mark -->
+  <circle cx="160" cy="30" r="18" fill="white" opacity="0.9"/>
+  <text x="160" y="38" font-size="9" font-weight="bold" fill="#f59e0b" text-anchor="middle">MHS</text>
+</svg>
