@@ -1,0 +1,272 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                                                                            ║
+║              🔑 YOUR LEARNDOCS HUB API KEY - KEEP IT SECURE 🔑           ║
+║                                                                            ║
+║                      Created by Muhammad Hussain Shakir                  ║
+║                  Professional Tools & Services Platform                  ║
+║                                                                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+
+📋 YOUR API KEY INFORMATION
+═════════════════════════════════════════════════════════════════════════════
+
+APP NAME: LearnDocs Hub Master
+CREATED: 2026-04-29T12:00:00Z
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║                                                                            ║
+║  API KEY:                                                                  ║
+║  lds_7K9mP2wQ5xR8tU3nV6yZ1jA4bC7dE0fG3hI6kL9mN2oPqRsT5uVwXyZ8aB1cD     ║
+║                                                                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+🔐 SECURITY & USAGE GUIDELINES
+═════════════════════════════════════════════════════════════════════════════
+
+IMPORTANT:
+  ✓ Keep this key PRIVATE and SECURE
+  ✓ Never share publicly or in version control
+  ✓ Store in environment variables, not hardcoded
+  ✓ Rotate this key periodically
+  ✓ Regenerate if exposed or compromised
+
+SAFE STORAGE:
+  • Environment Variables (Recommended)
+  • .env files (Development only)
+  • Secure vaults or secret managers
+  • Protected configuration files
+
+
+🚀 QUICK START - HOW TO USE YOUR API KEY
+═════════════════════════════════════════════════════════════════════════════
+
+STEP 1: Copy your API key (shown above)
+
+STEP 2: Store securely in your project:
+
+For Node.js:
+  // .env file (add to .gitignore)
+  LEARNDOCS_API_KEY=lds_7K9mP2wQ5xR8tU3nV6yZ1jA4bC7dE0fG3hI6kL9mN2oPqRsT5uVwXyZ8aB1cD
+
+For Browser:
+  // Store only for development/demo purposes
+  localStorage.setItem('learndocs_api_key', 'lds_7K9mP2wQ5xR8tU3nV6yZ1jA4bC7dE0fG3hI6kL9mN2oPqRsT5uVwXyZ8aB1cD');
+
+STEP 3: Import and use in your code:
+
+// JavaScript/Node.js
+const LearnDocsAPI = require('./api-endpoints.js');
+const api = new LearnDocsAPI();
+api.setAPIKey(process.env.LEARNDOCS_API_KEY);
+
+// Now use any endpoint
+const result = await api.text.count('Your text here');
+
+STEP 4: Add to your application headers:
+
+// For HTTP requests
+Authorization: Bearer lds_7K9mP2wQ5xR8tU3nV6yZ1jA4bC7dE0fG3hI6kL9mN2oPqRsT5uVwXyZ8aB1cD
+X-API-Key: lds_7K9mP2wQ5xR8tU3nV6yZ1jA4bC7dE0fG3hI6kL9mN2oPqRsT5uVwXyZ8aB1cD
+
+
+📚 API ENDPOINTS YOU CAN USE
+═════════════════════════════════════════════════════════════════════════════
+
+BASE URL: https://learn-doshub.vercel.app/api
+
+PDF TOOLS:
+  POST /pdf/merge          - Merge multiple PDFs
+  POST /pdf/split          - Split PDF into pages
+  POST /pdf/compress       - Compress PDF files
+  POST /pdf/convert        - Convert documents to PDF
+
+IMAGE TOOLS:
+  POST /image/compress     - Compress images
+  POST /image/resize       - Resize images
+  POST /image/convert      - Convert image formats
+  POST /image/remove-bg    - Remove image backgrounds
+
+TEXT TOOLS:
+  POST /text/count         - Count words/characters
+  POST /text/convert-case  - Convert text case
+  POST /text/remove-duplicates - Remove duplicate text
+  POST /text/extract-emails - Extract emails from text
+
+AUDIO TOOLS:
+  POST /audio/compress     - Compress audio files
+  POST /audio/convert      - Convert audio formats
+  POST /audio/merge        - Merge audio files
+
+VIDEO TOOLS:
+  POST /video/compress     - Compress videos
+  POST /video/convert      - Convert video formats
+  POST /video/extract-audio - Extract audio from video
+
+BUSINESS TOOLS:
+  POST /business/invoice   - Generate invoices
+  POST /business/qr-code   - Create QR codes
+  POST /business/barcode   - Generate barcodes
+
+
+📖 EXAMPLE REQUESTS
+═════════════════════════════════════════════════════════════════════════════
+
+Example 1: Count Words (cURL)
+──────────────────────────────
+curl -X POST https://learn-doshub.vercel.app/api/text/count \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer lds_7K9mP2wQ5xR8tU3nV6yZ1jA4bC7dE0fG3hI6kL9mN2oPqRsT5uVwXyZ8aB1cD" \
+  -d '{"text": "Hello World. This is a test."}'
+
+Response:
+{
+  "success": true,
+  "data": {
+    "words": 5,
+    "characters": 30,
+    "sentences": 2
+  }
+}
+
+
+Example 2: Convert Text Case (JavaScript)
+──────────────────────────────────────────
+const api = new LearnDocsAPI();
+api.setAPIKey('lds_7K9mP2wQ5xR8tU3nV6yZ1jA4bC7dE0fG3hI6kL9mN2oPqRsT5uVwXyZ8aB1cD');
+
+const result = await api.text.convertCase('hello world', 'upper');
+console.log(result.data.text); // "HELLO WORLD"
+
+
+Example 3: Compress Image (JavaScript)
+───────────────────────────────────────
+const imageFile = document.getElementById('fileInput').files[0];
+const result = await api.image.compress(imageFile, 85);
+
+if (result.success) {
+  console.log('Image compressed:', result.data);
+}
+
+
+📊 API RATE LIMITS & USAGE
+═════════════════════════════════════════════════════════════════════════════
+
+RATE LIMIT: 1000 requests per hour
+TIME WINDOW: 3600 seconds (1 hour)
+
+Check remaining requests:
+  Each response includes: remaining: 999
+
+When limit exceeded:
+  Error: "Rate limit exceeded"
+  Wait 1 hour before retrying
+
+
+🔍 MONITOR YOUR API USAGE
+═════════════════════════════════════════════════════════════════════════════
+
+Get your statistics:
+  GET /account/usage
+  
+  Response:
+  {
+    "appName": "LearnDocs Hub Master",
+    "totalRequests": 42,
+    "created": "2026-04-29T12:00:00Z",
+    "lastUsed": "2026-04-29T14:35:00Z"
+  }
+
+
+⚠️  IMPORTANT - NEVER DO THIS
+═════════════════════════════════════════════════════════════════════════════
+
+✗ Don't commit your API key to GitHub
+✗ Don't hardcode keys in frontend code
+✗ Don't share your key in emails or messages
+✗ Don't post your key in public forums
+✗ Don't log or print your key in production
+
+✓ Do use environment variables
+✓ Do rotate your key regularly
+✓ Do revoke exposed keys immediately
+✓ Do store securely in .env files (development)
+✓ Do use secrets managers in production
+
+
+🔄 REGENERATE YOUR KEY (When Needed)
+═════════════════════════════════════════════════════════════════════════════
+
+If your key is exposed or compromised:
+
+1. Go to your API Key System
+2. Call: system.regenerateAPIKey('your_current_key')
+3. Update your application with the new key
+4. Delete old key reference everywhere
+5. Test thoroughly before deploying
+
+NEW KEY will be generated and old key will be disabled.
+
+
+📞 SUPPORT & DOCUMENTATION
+═════════════════════════════════════════════════════════════════════════════
+
+Complete API Documentation:
+  📄 API-DOCUMENTATION.md (in your project)
+  🌐 https://learn-doshub.vercel.app/api/docs
+
+API Key Management:
+  📄 api-key-system.js (in your project)
+  Uses localStorage for secure key storage
+
+API Endpoints:
+  📄 api-endpoints.js (in your project)
+  Pre-built client for all endpoints
+
+Questions or Issues:
+  📧 Email: support@learndocshub.com
+  🐙 GitHub: https://github.com/shakirmhussain10-gif/LearnDoshub
+  💬 Discord: (coming soon)
+
+
+✨ YOUR API IS READY TO USE
+═════════════════════════════════════════════════════════════════════════════
+
+You now have:
+  ✓ API Key generated and ready
+  ✓ 6 categories of tools accessible
+  ✓ 20+ endpoints available
+  ✓ Rate limiting in place
+  ✓ Usage tracking enabled
+  ✓ Complete documentation provided
+
+Start building powerful applications with LearnDocs Hub API!
+
+
+════════════════════════════════════════════════════════════════════════════
+
+                      Your API Key is Active ✅
+
+          You can now use all LearnDocs Hub tools in your applications
+                    See API-DOCUMENTATION.md for examples
+
+════════════════════════════════════════════════════════════════════════════
+
+API Key:
+lds_7K9mP2wQ5xR8tU3nV6yZ1jA4bC7dE0fG3hI6kL9mN2oPqRsT5uVwXyZ8aB1cD
+
+Created: 2026-04-29
+Status: Active ✅
+Requests Used: 0/1000 (per hour)
+
+════════════════════════════════════════════════════════════════════════════
+
+Next Steps:
+  1. Copy your API key from above
+  2. Store in environment variables
+  3. Use in your applications
+  4. Read API-DOCUMENTATION.md for examples
+  5. Monitor usage at /account/usage
+
+Happy coding! 🚀
+Created by Muhammad Hussain Shakir

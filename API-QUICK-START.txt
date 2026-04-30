@@ -1,0 +1,224 @@
+═════════════════════════════════════════════════════════════════════════════
+                    LEARNDOCS HUB API - QUICK START GUIDE
+                         Created by Muhammad Hussain Shakir
+═════════════════════════════════════════════════════════════════════════════
+
+
+YOUR API KEY (KEEP IT SECRET):
+─────────────────────────────────────────────────────────────────────────────
+
+lds_7K9mP2wQ5xR8tU3nV6yZ1jA4bC7dE0fG3hI6kL9mN2oPqRsT5uVwXyZ8aB1cD
+
+
+SIMPLE SETUP (3 STEPS):
+─────────────────────────────────────────────────────────────────────────────
+
+1. Copy api-endpoints.js to your project folder
+
+2. In your JavaScript file, add:
+
+   const LearnDocsAPI = require('./api-endpoints.js');
+   const api = new LearnDocsAPI();
+   api.setAPIKey('lds_7K9mP2wQ5xR8tU3nV6yZ1jA4bC7dE0fG3hI6kL9mN2oPqRsT5uVwXyZ8aB1cD');
+
+3. Start using! Examples:
+
+   // Count words in text
+   const count = await api.text.count('Hello World');
+   
+   // Compress an image
+   const compressed = await api.image.compress(imageFile, 85);
+   
+   // Extract emails
+   const emails = await api.text.extractEmails('Contact: admin@example.com');
+
+
+20+ AVAILABLE ENDPOINTS:
+─────────────────────────────────────────────────────────────────────────────
+
+PDF TOOLS:
+  • api.pdf.merge(files)           - Merge PDFs
+  • api.pdf.split(file, pages)     - Split PDF
+  • api.pdf.compress(file, quality) - Compress PDF
+  • api.pdf.convert(file)          - Convert to PDF
+
+IMAGE TOOLS:
+  • api.image.compress(file, quality) - Compress
+  • api.image.resize(file, width, height) - Resize
+  • api.image.convert(file, format) - Change format
+  • api.image.removeBg(file)       - Remove background
+
+TEXT TOOLS:
+  • api.text.count(text)           - Count words/chars
+  • api.text.convertCase(text, type) - Change case
+  • api.text.removeDuplicates(text) - Remove duplicates
+  • api.text.extractEmails(text)   - Find emails
+
+AUDIO TOOLS:
+  • api.audio.compress(file, bitrate) - Compress
+  • api.audio.convert(file, format) - Change format
+  • api.audio.merge(files)         - Merge files
+
+VIDEO TOOLS:
+  • api.video.compress(file, quality) - Compress
+  • api.video.convert(file, format) - Change format
+  • api.video.extractAudio(file)   - Extract audio
+
+BUSINESS TOOLS:
+  • api.business.createInvoice(data) - Generate invoice
+  • api.business.createQRCode(text) - Create QR code
+  • api.business.createBarcode(text) - Create barcode
+
+
+USAGE LIMITS:
+─────────────────────────────────────────────────────────────────────────────
+
+Requests per hour: 1000
+Timeout: 30 seconds per request
+Max file size: 100MB
+
+
+BROWSER USAGE:
+─────────────────────────────────────────────────────────────────────────────
+
+<script src="api-endpoints.js"></script>
+
+<script>
+  const api = new LearnDocsAPI();
+  api.setAPIKey('lds_7K9mP2wQ5xR8tU3nV6yZ1jA4bC7dE0fG3hI6kL9mN2oPqRsT5uVwXyZ8aB1cD');
+  
+  async function compressImage(file) {
+    const result = await api.image.compress(file, 80);
+    if (result.success) {
+      console.log('Compressed:', result.data);
+    }
+  }
+</script>
+
+
+NODE.JS USAGE:
+─────────────────────────────────────────────────────────────────────────────
+
+const LearnDocsAPI = require('./api-endpoints.js');
+const api = new LearnDocsAPI();
+api.setAPIKey(process.env.LEARNDOCS_API_KEY);
+
+(async () => {
+  const text = 'Hello World. How are you?';
+  
+  // Count
+  const result = await api.text.count(text);
+  console.log(`Words: ${result.data.words}`);
+  
+  // Case
+  const upper = await api.text.convertCase(text, 'upper');
+  console.log(`Upper: ${upper.data.text}`);
+})();
+
+
+REACT EXAMPLE:
+─────────────────────────────────────────────────────────────────────────────
+
+import { useState } from 'react';
+import LearnDocsAPI from './api-endpoints.js';
+
+export default function TextCounter() {
+  const [count, setCount] = useState(0);
+  const api = new LearnDocsAPI();
+  
+  const handleCount = async (text) => {
+    api.setAPIKey(localStorage.getItem('api_key'));
+    const result = await api.text.count(text);
+    setCount(result.data.words);
+  };
+  
+  return (
+    <div>
+      <textarea onBlur={(e) => handleCount(e.target.value)} />
+      <p>Words: {count}</p>
+    </div>
+  );
+}
+
+
+SECURITY TIPS:
+─────────────────────────────────────────────────────────────────────────────
+
+✓ Use environment variables (process.env.LEARNDOCS_API_KEY)
+✓ Add .env file to .gitignore
+✓ Never hardcode key in your code
+✓ Don't commit key to GitHub
+✓ Rotate key if exposed
+✓ Use backend for sensitive operations
+✓ Rate limit your requests
+
+
+ERROR HANDLING:
+─────────────────────────────────────────────────────────────────────────────
+
+const result = await api.text.count(text);
+
+if (result.success) {
+  console.log('Result:', result.data);
+} else {
+  console.error('Error:', result.error);
+}
+
+Common errors:
+  • Invalid API key → Regenerate key
+  • Rate limit exceeded → Wait 1 hour
+  • File too large → Max 100MB
+  • Timeout → File processing took too long
+
+
+.ENV FILE EXAMPLE:
+─────────────────────────────────────────────────────────────────────────────
+
+# .env (add to .gitignore)
+LEARNDOCS_API_KEY=lds_7K9mP2wQ5xR8tU3nV6yZ1jA4bC7dE0fG3hI6kL9mN2oPqRsT5uVwXyZ8aB1cD
+
+# Use in code:
+const apiKey = process.env.LEARNDOCS_API_KEY;
+
+
+API RESPONSE FORMAT:
+─────────────────────────────────────────────────────────────────────────────
+
+Success response:
+{
+  success: true,
+  data: {
+    // endpoint-specific data
+  },
+  remaining: 999  // requests remaining this hour
+}
+
+Error response:
+{
+  success: false,
+  error: 'Error message',
+  remaining: 999
+}
+
+
+DOCUMENTATION:
+─────────────────────────────────────────────────────────────────────────────
+
+For more details, read:
+  • API-DOCUMENTATION.md - Complete reference
+  • YOUR-API-KEY.txt - Security guidelines
+  • api-endpoints.js - Source code with JSDoc
+
+
+SUPPORT:
+─────────────────────────────────────────────────────────────────────────────
+
+Created by: Muhammad Hussain Shakir
+Platform: LearnDocs Hub
+Version: 1.0.0
+Status: Production Ready
+
+
+═════════════════════════════════════════════════════════════════════════════
+                          Ready to use in your apps!
+═════════════════════════════════════════════════════════════════════════════
