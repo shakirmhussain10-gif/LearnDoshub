@@ -55,6 +55,6 @@ Allow: /privacy.html
 Allow: /terms.html
 
 # Sitemaps
-Sitemap: https://learndocs-hub.com/sitemap.xml
-Sitemap: https://learndocs-hub.com/sitemap-tools.xml
-Sitemap: https://learndocs-hub.com/sitemap-blog.xml
+Sitemap: https://learn-doshub.vercel.app/sitemap.xml
+Sitemap: https://learn-doshub.vercel.app/sitemap-tools.xml
+Sitemap: https://learn-doshub.vercel.app/sitemap-blog.xml
