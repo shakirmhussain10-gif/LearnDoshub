@@ -57,4 +57,3 @@ Allow: /terms.html
 # Sitemaps
 Sitemap: https://learn-doshub.vercel.app/sitemap.xml
 Sitemap: https://learn-doshub.vercel.app/sitemap-tools.xml
-Sitemap: https://learn-doshub.vercel.app/sitemap-blog.xml
