@@ -4,19 +4,6 @@
 User-agent: *
 Allow: /
 
-# Increase crawl rate for major search engines
-User-agent: Googlebot
-Allow: /
-Crawl-delay: 1
-
-User-agent: Bingbot
-Allow: /
-Crawl-delay: 1
-
-User-agent: Slurp
-Allow: /
-Crawl-delay: 1
-
 # Disallow admin and internal pages
 User-agent: *
 Disallow: /admin.html
@@ -28,7 +15,7 @@ Disallow: /app-icons.html
 Disallow: /temp.txt
 Disallow: /VERSION
 
-# Specifically allow important tool pages (redundant but explicit for clarity)
+# Specifically allow important tool pages
 User-agent: *
 Allow: /pdf-tools.html
 Allow: /pdf-editor.html
