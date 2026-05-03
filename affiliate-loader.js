@@ -12,11 +12,19 @@
 
   function detectPageId() {
     const path = location.pathname.split('/').pop().replace('.html', '');
-    const map = { 'video-tools':'video-tools','audio-tools':'audio-tools','image-tools':'image-tools','text-tools':'text-tools','calculators':'calculators','social-tools':'social-tools','business-tools':'business-tools','popular-tools':'popular-tools' };
+    const map = {
+      'video-tools':'video-tools','audio-tools':'audio-tools',
+      'image-tools':'image-tools','text-tools':'text-tools',
+      'calculators':'calculators','social-tools':'social-tools',
+      'business-tools':'business-tools','popular-tools':'popular-tools',
+      'index':'index','contact':'contact','settings':'settings',
+      'lecture-videos':'lecture-videos','test-paper-generator':'test-paper'
+    };
     return map[path] || null;
   }
 
   if (!PAGE_ID) return;
+  const BANNER_ONLY = ['index','contact','settings','lecture-videos'].includes(PAGE_ID);
 
   async function fetchFirebase(path) {
     try { const r = await fetch(FIREBASE_DB_URL + '/' + path + '.json'); return await r.json(); }
@@ -38,12 +46,14 @@
     if (!hasLink && !(banner && banner.url)) return;
 
     injectStyles(settings.btnColor || '#6366f1');
-    buildOverlay();
 
     if (banner && banner.url && banner.text) showBanner(banner.text, banner.url);
 
-    setTimeout(interceptButtons, 900);
-    observeNewButtons();
+    if (!BANNER_ONLY && hasLink) {
+      buildOverlay();
+      setTimeout(interceptButtons, 900);
+      observeNewButtons();
+    }
   }
 
   /* ── OVERLAY ── */
