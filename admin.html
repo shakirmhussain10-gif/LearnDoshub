@@ -1,170 +1,866 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Admin - Elite Document Suite</title>
-<meta name="robots" content="noindex">
-<style>
-body{font-family:system-ui;background:#0f172a;color:#fff;padding:20px}
-.box{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;max-width:500px;margin:0 auto}
-input{width:100%;padding:12px;margin:8px 0;border-radius:8px;border:1px solid #334155;background:#334155;color:#fff}
-button{width:100%;padding:14px;background:#6366f1;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;margin-top:8px}
-button:hover{opacity:0.9}
-.btn2{background:#334155}
-.msg{padding:12px;margin:10px 0;border-radius:6px;text-align:center}
-.err{background:rgba(239,68,68,0.2);color:#ef4444}
-.ok{background:rgba(16,185,129,0.2);color:#10b981}
-.panel{display:none}
-h2{text-align:center;margin-bottom:20px}
-h3{margin-top:24px;margin-bottom:12px}
-label{display:block;margin:12px 0 4px}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Admin Panel – LearnDocs Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Firebase Compat -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+
+  <style>
+    :root {
+      --bg: #080c14;
+      --surface: #0d1424;
+      --card: #111827;
+      --border: #1e2d45;
+      --border2: #243352;
+      --accent: #00d4ff;
+      --accent2: #7c3aed;
+      --accent3: #10b981;
+      --warn: #f59e0b;
+      --danger: #ef4444;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --muted2: #94a3b8;
+      --glow: rgba(0,212,255,0.15);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Syne', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── LOGIN SCREEN ── */
+    #loginScreen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,212,255,0.08) 0%, transparent 60%),
+                  radial-gradient(ellipse 50% 40% at 80% 80%, rgba(124,58,237,0.08) 0%, transparent 60%),
+                  var(--bg);
+    }
+    .login-box {
+      width: 400px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 48px 40px;
+      text-align: center;
+      box-shadow: 0 0 60px rgba(0,212,255,0.06), 0 24px 48px rgba(0,0,0,0.5);
+    }
+    .login-logo {
+      font-size: 2.4rem; font-weight: 800; letter-spacing: -1px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+    .login-sub { color: var(--muted); font-size: 0.85rem; margin-bottom: 32px; font-family: 'JetBrains Mono', monospace; }
+    .input-group { margin-bottom: 16px; text-align: left; }
+    .input-group label { font-size: 0.75rem; color: var(--muted2); font-family: 'JetBrains Mono', monospace; letter-spacing: 1px; text-transform: uppercase; display: block; margin-bottom: 6px; }
+    .input-group input {
+      width: 100%; padding: 12px 16px;
+      background: var(--surface); border: 1px solid var(--border2);
+      border-radius: 10px; color: var(--text);
+      font-family: 'JetBrains Mono', monospace; font-size: 0.9rem;
+      outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .input-group input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,212,255,0.1); }
+    .btn-login {
+      width: 100%; padding: 13px;
+      background: linear-gradient(135deg, var(--accent), #0099cc);
+      border: none; border-radius: 10px;
+      color: #000; font-family: 'Syne', sans-serif; font-weight: 700;
+      font-size: 0.95rem; cursor: pointer; margin-top: 8px;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .btn-login:hover { opacity: 0.9; transform: translateY(-1px); }
+    #loginError { color: var(--danger); font-size: 0.82rem; margin-top: 10px; font-family: 'JetBrains Mono', monospace; }
+
+    /* ── ADMIN LAYOUT ── */
+    #adminApp { display: none; min-height: 100vh; }
+
+    .topbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      height: 60px; padding: 0 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(8,12,20,0.95); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .topbar-brand {
+      font-size: 1.1rem; font-weight: 800; letter-spacing: -0.5px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .topbar-right { display: flex; align-items: center; gap: 12px; }
+    .user-badge {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
+      color: var(--muted2); background: var(--surface);
+      padding: 6px 12px; border-radius: 20px; border: 1px solid var(--border);
+    }
+    .btn-logout {
+      padding: 7px 16px; background: transparent;
+      border: 1px solid var(--danger); border-radius: 8px;
+      color: var(--danger); font-family: 'Syne', sans-serif; font-size: 0.82rem;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-logout:hover { background: var(--danger); color: #fff; }
+    .status-dot {
+      width: 8px; height: 8px; border-radius: 50%; background: var(--accent3);
+      box-shadow: 0 0 8px var(--accent3); animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+    .sidebar {
+      position: fixed; top: 60px; left: 0; bottom: 0; width: 220px;
+      background: var(--surface); border-right: 1px solid var(--border);
+      overflow-y: auto; z-index: 100; padding: 16px 0;
+    }
+    .sidebar-section { padding: 6px 16px 4px; font-size: 0.65rem; color: var(--muted); font-family: 'JetBrains Mono', monospace; letter-spacing: 2px; text-transform: uppercase; margin-top: 8px; }
+    .sidebar-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 20px; margin: 2px 8px; border-radius: 8px;
+      cursor: pointer; transition: all 0.2s;
+      font-size: 0.88rem; color: var(--muted2); font-weight: 600;
+    }
+    .sidebar-item:hover { background: var(--card); color: var(--text); }
+    .sidebar-item.active { background: rgba(0,212,255,0.1); color: var(--accent); border: 1px solid rgba(0,212,255,0.2); }
+    .sidebar-item .s-icon { font-size: 1rem; width: 20px; text-align: center; }
+    .sidebar-badge {
+      margin-left: auto; background: var(--accent); color: #000;
+      font-size: 0.65rem; font-weight: 700; padding: 2px 7px;
+      border-radius: 10px; font-family: 'JetBrains Mono', monospace;
+    }
+
+    .main-content {
+      margin-left: 220px; padding-top: 60px; min-height: 100vh;
+    }
+    .page { display: none; padding: 32px; }
+    .page.active { display: block; }
+
+    /* ── DASHBOARD ── */
+    .page-title { font-size: 1.6rem; font-weight: 800; margin-bottom: 4px; letter-spacing: -0.5px; }
+    .page-sub { color: var(--muted); font-size: 0.85rem; font-family: 'JetBrains Mono', monospace; margin-bottom: 28px; }
+
+    .stats-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 16px; margin-bottom: 32px; }
+    .stat-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 22px;
+      position: relative; overflow: hidden;
+    }
+    .stat-card::before {
+      content:''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    }
+    .stat-card.blue::before { background: linear-gradient(90deg, var(--accent), transparent); }
+    .stat-card.purple::before { background: linear-gradient(90deg, var(--accent2), transparent); }
+    .stat-card.green::before { background: linear-gradient(90deg, var(--accent3), transparent); }
+    .stat-card.warn::before { background: linear-gradient(90deg, var(--warn), transparent); }
+    .stat-val { font-size: 2rem; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+    .stat-label { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
+    .stat-icon { font-size: 1.8rem; position: absolute; right: 18px; top: 18px; opacity: 0.3; }
+
+    /* ── AFFILIATE MANAGER ── */
+    .section-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 24px; margin-bottom: 24px;
+    }
+    .section-card-title {
+      font-size: 1rem; font-weight: 700; margin-bottom: 4px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-card-sub { font-size: 0.78rem; color: var(--muted); font-family: 'JetBrains Mono', monospace; margin-bottom: 20px; }
+
+    .page-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+    .page-tab {
+      padding: 8px 18px; border-radius: 8px; cursor: pointer; font-size: 0.82rem;
+      font-weight: 600; border: 1px solid var(--border); background: var(--surface);
+      color: var(--muted2); transition: all 0.2s;
+    }
+    .page-tab:hover { border-color: var(--border2); color: var(--text); }
+    .page-tab.active { background: rgba(0,212,255,0.1); border-color: var(--accent); color: var(--accent); }
+
+    .tool-aff-list { display: flex; flex-direction: column; gap: 10px; }
+    .tool-aff-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 16px; background: var(--surface);
+      border: 1px solid var(--border); border-radius: 10px;
+      transition: border-color 0.2s;
+    }
+    .tool-aff-item:hover { border-color: var(--border2); }
+    .tool-aff-name { font-size: 0.9rem; font-weight: 600; min-width: 180px; }
+    .tool-aff-input {
+      flex: 1; padding: 8px 12px;
+      background: var(--bg); border: 1px solid var(--border2);
+      border-radius: 8px; color: var(--text);
+      font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
+      outline: none; transition: border-color 0.2s;
+    }
+    .tool-aff-input:focus { border-color: var(--accent); }
+    .tool-aff-input.has-link { border-color: var(--accent3); background: rgba(16,185,129,0.05); }
+    .btn-save-link {
+      padding: 8px 16px; background: var(--accent); color: #000;
+      border: none; border-radius: 8px; font-weight: 700;
+      font-family: 'Syne', sans-serif; font-size: 0.8rem; cursor: pointer;
+      white-space: nowrap; transition: opacity 0.2s;
+    }
+    .btn-save-link:hover { opacity: 0.85; }
+    .btn-save-link.saved { background: var(--accent3); }
+    .link-status { font-size: 0.7rem; font-family: 'JetBrains Mono', monospace; white-space: nowrap; }
+    .link-status.live { color: var(--accent3); }
+    .link-status.empty { color: var(--muted); }
+
+    /* Banner / Page-level links */
+    .banner-form { display: flex; flex-direction: column; gap: 14px; }
+    .banner-row { display: grid; grid-template-columns: 160px 1fr auto; gap: 10px; align-items: center; }
+    .banner-label { font-size: 0.85rem; font-weight: 600; }
+    .banner-input {
+      padding: 10px 14px; background: var(--bg);
+      border: 1px solid var(--border2); border-radius: 8px;
+      color: var(--text); font-family: 'JetBrains Mono', monospace; font-size: 0.82rem;
+      outline: none; transition: border-color 0.2s;
+    }
+    .banner-input:focus { border-color: var(--accent); }
+    .banner-input.has-link { border-color: var(--accent3); background: rgba(16,185,129,0.05); }
+
+    /* Global save */
+    .save-bar {
+      position: fixed; bottom: 24px; right: 32px; z-index: 300;
+      background: var(--accent3); color: #000;
+      padding: 12px 24px; border-radius: 12px;
+      font-weight: 700; font-size: 0.9rem;
+      box-shadow: 0 8px 32px rgba(16,185,129,0.4);
+      display: none; align-items: center; gap: 10px;
+      animation: slideUp 0.3s ease;
+    }
+    @keyframes slideUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
+    .save-bar.show { display: flex; }
+
+    /* ── ACTIVITY LOG ── */
+    .log-list { display: flex; flex-direction: column; gap: 8px; max-height: 400px; overflow-y: auto; }
+    .log-item {
+      display: flex; gap: 12px; align-items: flex-start;
+      padding: 10px 14px; background: var(--surface);
+      border-radius: 8px; border-left: 3px solid var(--border);
+      font-size: 0.82rem;
+    }
+    .log-item.success { border-left-color: var(--accent3); }
+    .log-item.info { border-left-color: var(--accent); }
+    .log-time { color: var(--muted); font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; white-space: nowrap; }
+
+    /* ── PREVIEW ── */
+    .preview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 16px; }
+    .preview-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 18px; position: relative;
+    }
+    .preview-page { font-size: 0.7rem; color: var(--muted); font-family: 'JetBrains Mono', monospace; margin-bottom: 6px; }
+    .preview-tool { font-weight: 700; font-size: 0.95rem; margin-bottom: 8px; }
+    .preview-link {
+      font-size: 0.75rem; font-family: 'JetBrains Mono', monospace;
+      color: var(--accent3); word-break: break-all;
+    }
+    .preview-no-link { font-size: 0.75rem; color: var(--muted); font-style: italic; }
+    .preview-badge {
+      position: absolute; top: 14px; right: 14px;
+      width: 8px; height: 8px; border-radius: 50%;
+    }
+    .preview-badge.live { background: var(--accent3); box-shadow: 0 0 6px var(--accent3); }
+    .preview-badge.empty { background: var(--border2); }
+
+    /* Buttons */
+    .btn { padding: 10px 20px; border-radius: 10px; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.88rem; cursor: pointer; transition: all 0.2s; border: none; }
+    .btn-primary { background: linear-gradient(135deg, var(--accent), #0099cc); color: #000; }
+    .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-secondary { background: var(--surface); border: 1px solid var(--border2); color: var(--text); }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-danger { background: transparent; border: 1px solid var(--danger); color: var(--danger); }
+    .btn-danger:hover { background: var(--danger); color: #fff; }
+
+    .flex-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .mt-16 { margin-top: 16px; }
+    .mt-8 { margin-top: 8px; }
+
+    /* Toast */
+    #toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: var(--accent3); color: #000;
+      padding: 12px 24px; border-radius: 10px;
+      font-weight: 700; font-size: 0.88rem;
+      z-index: 9999; display: none;
+      box-shadow: 0 8px 32px rgba(16,185,129,0.4);
+    }
+    #toast.error { background: var(--danger); color: #fff; box-shadow: 0 8px 32px rgba(239,68,68,0.4); }
+    #toast.show { display: block; animation: fadeInOut 2.5s forwards; }
+    @keyframes fadeInOut { 0%{opacity:0;transform:translateX(-50%) translateY(10px)} 15%,80%{opacity:1;transform:translateX(-50%) translateY(0)} 100%{opacity:0;transform:translateX(-50%) translateY(10px)} }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .main-content { margin-left: 0; }
+      .banner-row { grid-template-columns: 1fr; }
+      .tool-aff-item { flex-wrap: wrap; }
+    }
+  </style>
 </head>
 <body>
 
-<div class="box" id="loginBox">
-<h2>🔐 Owner Login</h2>
-<input type="password" id="pass" placeholder="Password: shakirmhussain01">
-<button onclick="login()">Login</button>
-<div class="msg err" id="err" style="display:none"></div>
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">⚡ Admin</div>
+    <div class="login-sub">LearnDocs Hub — Control Panel</div>
+    <div class="input-group">
+      <label>Email</label>
+      <input type="email" id="loginEmail" placeholder="admin@email.com">
+    </div>
+    <div class="input-group">
+      <label>Password</label>
+      <input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="btn-login" onclick="doLogin()">Sign In →</button>
+    <div id="loginError"></div>
+  </div>
 </div>
 
-<div class="box panel" id="panel">
-<h2>💰 Affiliate Links</h2>
-<input type="url" id="affPdf" placeholder="PDF Affiliate URL">
-<input type="url" id="affImg" placeholder="Image Affiliate URL">
-<input type="url" id="affBiz" placeholder="Business Affiliate URL">
-<input type="url" id="affGen" placeholder="General Affiliate URL">
-<button onclick="save()">Save to Firebase</button>
-<div class="msg ok" id="ok" style="display:none"></div>
+<!-- ADMIN APP -->
+<div id="adminApp">
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar-brand">⚡ LearnDocs Admin</div>
+    <div class="topbar-right">
+      <div class="status-dot"></div>
+      <div class="user-badge" id="userBadge">admin</div>
+      <button class="btn-logout" onclick="doLogout()">Logout</button>
+    </div>
+  </div>
 
-<h3>📊 Analytics</h3>
-<input type="text" id="analytics" placeholder="G-XXXXXXXXXX">
-<button onclick="saveAnalytics()">Save</button>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-section">Main</div>
+    <div class="sidebar-item active" onclick="showPage('dashboard',this)"><span class="s-icon">📊</span> Dashboard</div>
+    <div class="sidebar-item" onclick="showPage('affiliates',this)"><span class="s-icon">🔗</span> Affiliate Links <span class="sidebar-badge" id="liveCount">0</span></div>
+    <div class="sidebar-item" onclick="showPage('banners',this)"><span class="s-icon">📢</span> Page Banners</div>
+    <div class="sidebar-item" onclick="showPage('preview',this)"><span class="s-icon">👁️</span> Preview All</div>
+    <div class="sidebar-section">Settings</div>
+    <div class="sidebar-item" onclick="showPage('settings',this)"><span class="s-icon">⚙️</span> Settings</div>
+    <div class="sidebar-item" onclick="showPage('activity',this)"><span class="s-icon">📋</span> Activity Log</div>
+    <div class="sidebar-section">Site</div>
+    <div class="sidebar-item" onclick="window.open('index.html','_blank')"><span class="s-icon">🌐</span> View Site</div>
+  </div>
 
-<h3>📬 Messages</h3>
-<div id="msgs"></div>
-<button class="btn2" onclick="loadMsgs()">Refresh</button>
+  <!-- Main -->
+  <div class="main-content">
 
-<h3>🔒 Security Logs</h3>
-<div id="logs"></div>
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="page-title">Dashboard</div>
+      <div class="page-sub">// overview of affiliate link coverage</div>
+      <div class="stats-row">
+        <div class="stat-card blue">
+          <div class="stat-icon">🔗</div>
+          <div class="stat-val" id="stat-total">0</div>
+          <div class="stat-label">Total Tool Slots</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-icon">✅</div>
+          <div class="stat-val" id="stat-live">0</div>
+          <div class="stat-label">Live Links</div>
+        </div>
+        <div class="stat-card warn">
+          <div class="stat-icon">⚠️</div>
+          <div class="stat-val" id="stat-empty">0</div>
+          <div class="stat-label">Empty Slots</div>
+        </div>
+        <div class="stat-card purple">
+          <div class="stat-icon">📄</div>
+          <div class="stat-val" id="stat-pages">8</div>
+          <div class="stat-label">Pages Managed</div>
+        </div>
+      </div>
+      <div class="section-card">
+        <div class="section-card-title">📈 Coverage by Page</div>
+        <div class="section-card-sub">// affiliate link fill rate per section</div>
+        <div id="coverageList" style="display:flex;flex-direction:column;gap:10px;"></div>
+      </div>
+      <div class="section-card">
+        <div class="section-card-title">💡 Quick Actions</div>
+        <div class="section-card-sub">// common admin tasks</div>
+        <div class="flex-row">
+          <button class="btn btn-primary" onclick="showPage('affiliates',document.querySelector('[onclick*=affiliates]'))">Manage Affiliate Links</button>
+          <button class="btn btn-secondary" onclick="showPage('banners',document.querySelector('[onclick*=banners]'))">Edit Page Banners</button>
+          <button class="btn btn-secondary" onclick="showPage('preview',document.querySelector('[onclick*=preview]'))">Preview All Links</button>
+          <button class="btn btn-secondary" onclick="exportLinks()">Export JSON</button>
+        </div>
+      </div>
+    </div>
 
-<button onclick="logout()" style="margin-top:24px;background:#ef4444">Logout</button>
+    <!-- AFFILIATE LINKS -->
+    <div class="page" id="page-affiliates">
+      <div class="page-title">Affiliate Links</div>
+      <div class="page-sub">// set unique affiliate URL for each tool — shown before download/convert on that page</div>
+      <div class="page-tabs" id="affTabs"></div>
+      <div id="affContent"></div>
+    </div>
+
+    <!-- PAGE BANNERS -->
+    <div class="page" id="page-banners">
+      <div class="page-title">Page Banners</div>
+      <div class="page-sub">// sticky affiliate banner shown at top of each page</div>
+      <div class="section-card">
+        <div class="section-card-title">📢 Top Banner Per Page</div>
+        <div class="section-card-sub">// banner with text + affiliate link shown to all visitors on that page</div>
+        <div class="banner-form" id="bannerForm"></div>
+        <div class="mt-16">
+          <button class="btn btn-primary" onclick="saveBanners()">💾 Save All Banners</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PREVIEW -->
+    <div class="page" id="page-preview">
+      <div class="page-title">Preview All Links</div>
+      <div class="page-sub">// real-time view of all affiliate links in Firebase</div>
+      <div class="flex-row mt-8" style="margin-bottom:20px;">
+        <button class="btn btn-secondary" onclick="loadPreview()">🔄 Refresh</button>
+        <button class="btn btn-secondary" onclick="exportLinks()">📥 Export JSON</button>
+      </div>
+      <div class="preview-grid" id="previewGrid"></div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="page" id="page-settings">
+      <div class="page-title">Settings</div>
+      <div class="page-sub">// global configuration</div>
+      <div class="section-card">
+        <div class="section-card-title">🎯 Global Affiliate Settings</div>
+        <div class="section-card-sub">// default text shown on affiliate buttons</div>
+        <div class="input-group" style="max-width:480px;">
+          <label>Affiliate Button Text</label>
+          <input type="text" id="settingBtnText" class="tool-aff-input" placeholder="e.g. 🎁 Get Discount – Click Here" style="width:100%">
+        </div>
+        <div class="input-group mt-8" style="max-width:480px;">
+          <label>Button Background Color</label>
+          <input type="color" id="settingBtnColor" value="#6366f1" style="height:40px;width:80px;border:none;background:none;cursor:pointer;">
+        </div>
+        <div class="input-group mt-8" style="max-width:480px;">
+          <label>Show Affiliate Links</label>
+          <select id="settingShow" class="tool-aff-input" style="width:100%">
+            <option value="before">Before Download/Convert Button</option>
+            <option value="after">After Download/Convert Button</option>
+            <option value="both">Both Before & After</option>
+          </select>
+        </div>
+        <button class="btn btn-primary mt-16" onclick="saveSettings()">💾 Save Settings</button>
+      </div>
+      <div class="section-card" style="margin-top:0">
+        <div class="section-card-title">🗑️ Danger Zone</div>
+        <div class="section-card-sub">// irreversible actions</div>
+        <div class="flex-row">
+          <button class="btn btn-danger" onclick="clearAllLinks()">Clear ALL Affiliate Links</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACTIVITY LOG -->
+    <div class="page" id="page-activity">
+      <div class="page-title">Activity Log</div>
+      <div class="page-sub">// recent admin actions</div>
+      <div class="section-card">
+        <div class="flex-row" style="margin-bottom:16px;">
+          <button class="btn btn-secondary" onclick="loadLog()">🔄 Refresh Log</button>
+          <button class="btn btn-danger" onclick="clearLog()">Clear Log</button>
+        </div>
+        <div class="log-list" id="logList"><div style="color:var(--muted);font-size:0.85rem;">Loading...</div></div>
+      </div>
+    </div>
+
+  </div>
 </div>
 
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<div id="toast"></div>
 
 <script>
+// ─── FIREBASE CONFIG ───
 const firebaseConfig = {
-  apiKey: "AIzaSyA5hqbHcuPuev9MwmJn0ZpdYppxyljCN-E",
-  authDomain: "elite-docs-admin-28310.firebaseapp.com",
-  projectId: "elite-docs-admin-28310",
-  storageBucket: "elite-docs-admin-28310.firebasestorage.app",
-  messagingSenderId: "605421627453",
-  appId: "1:605421627453:web:f4a3c58f47baf3e6f7a254"
+  apiKey: "AIzaSyBrvlhnJ2BbVTU8able1bw4OjKh1H5MJ9I",
+  authDomain: "app-link-7cb74.firebaseapp.com",
+  databaseURL: "https://app-link-7cb74-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "app-link-7cb74",
+  storageBucket: "app-link-7cb74.firebasestorage.app",
+  messagingSenderId: "269962762360",
+  appId: "1:269962762360:web:9462c61ee3123c42e8758d",
+  measurementId: "G-B5LR0SG2SD"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const auth = firebase.auth();
+
+// ─── TOOL DEFINITIONS ───
+const PAGES = {
+  'video-tools': {
+    label: '🎬 Video Tools',
+    tools: ['Video Compressor','Video Converter','Video Trimmer','GIF Maker','Speed Changer']
+  },
+  'audio-tools': {
+    label: '🎵 Audio Tools',
+    tools: ['Audio Converter','Audio Trimmer','Volume Changer','Speed Changer']
+  },
+  'image-tools': {
+    label: '🖼️ Image Tools',
+    tools: ['Image Resizer','Image Compressor','Image Cropper','Rotate Image','Flip Image','JPG to PNG','PNG to JPG','Convert to WebP','WebP to JPG','Background Remover','Black & White Filter','Blur Image','Add Watermark','Image to Text (OCR)','Text to Image Generator','Bulk Image Resizer','Change Image DPI','Convert Image to SVG']
+  },
+  'text-tools': {
+    label: '📝 Text Tools',
+    tools: ['Word Counter','Character Counter','Case Converter','Text to PDF','PDF to Text','Online Notepad','Password Generator','QR Code Generator','Barcode Generator','Lorem Ipsum Generator','Text Reverser','Duplicate Line Remover','Text Encryptor']
+  },
+  'calculators': {
+    label: '🧮 Calculators',
+    tools: ['Loan Calculator','BMI Calculator','Age Calculator','GST Calculator','Percentage Calculator','Unit Converter','Currency Converter','Tip Calculator','Discount Calculator','Calorie Calculator']
+  },
+  'social-tools': {
+    label: '📱 Social Tools',
+    tools: ['Instagram Resizer','YouTube Thumbnail','Twitter Header','Facebook Cover','LinkedIn Banner','Story Maker','Profile Picture Maker','Banner Resizer']
+  },
+  'business-tools': {
+    label: '💼 Business Tools',
+    tools: ['Invoice Generator','Resume Builder','Business Card Maker','Contract Template','Letter Generator','Certificate Maker','Timesheet Calculator','Meeting Agenda']
+  },
+  'popular-tools': {
+    label: '🔥 Popular Tools',
+    tools: ['Video Compressor','Audio Converter','Loan Calculator','Background Remover','QR Code Generator','Instagram Resizer','YouTube Thumbnail','OCR Scanner']
+  }
 };
 
-let db;
-try{
-  firebase.initializeApp(firebaseConfig);
-  db = firebase.firestore();
-  console.log('✓ Firebase connected');
-}catch(e){
-  console.log('Firebase error:',e);
+// ─── STATE ───
+let currentPage = 'dashboard';
+let affData = {};    // { 'video-tools/Video Compressor': 'https://...' }
+let bannerData = {}; // { 'video-tools': { text:'...', url:'...' } }
+let settings = {};
+let logEntries = [];
+let activeAffPage = Object.keys(PAGES)[0];
+
+// ─── AUTH ───
+auth.onAuthStateChanged(user => {
+  if (user) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminApp').style.display = 'block';
+    document.getElementById('userBadge').textContent = user.email;
+    initAdmin();
+  } else {
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('adminApp').style.display = 'none';
+  }
+});
+
+function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass  = document.getElementById('loginPass').value;
+  document.getElementById('loginError').textContent = '';
+  auth.signInWithEmailAndPassword(email, pass).catch(e => {
+    document.getElementById('loginError').textContent = '❌ ' + e.message;
+  });
+}
+function doLogout() { auth.signOut(); }
+
+// ─── INIT ───
+async function initAdmin() {
+  await loadAllData();
+  buildAffTabs();
+  buildAffContent(activeAffPage);
+  buildBannerForm();
+  updateDashboard();
+  loadLog();
+  loadPreview();
 }
 
-function login(){
-  const p = document.getElementById('pass').value;
-  if(p === 'shakirmhussain01'){
-    document.getElementById('loginBox').style.display='none';
-    document.getElementById('panel').style.display='block';
-    loadData();
-    addLog('OWNER_LOGIN', 'Owner logged in');
-  }else{
-    document.getElementById('err').textContent='Wrong password';
-    document.getElementById('err').style.display='block';
+async function loadAllData() {
+  const [affSnap, banSnap, setSnap] = await Promise.all([
+    db.ref('affiliateLinks').once('value'),
+    db.ref('pageBanners').once('value'),
+    db.ref('adminSettings').once('value'),
+  ]);
+  affData    = affSnap.val()  || {};
+  bannerData = banSnap.val()  || {};
+  settings   = setSnap.val()  || { btnText:'🎁 Claim Offer – Click Here', btnColor:'#6366f1', show:'before' };
+
+  // Apply settings to inputs
+  document.getElementById('settingBtnText').value  = settings.btnText  || '';
+  document.getElementById('settingBtnColor').value = settings.btnColor || '#6366f1';
+  document.getElementById('settingShow').value     = settings.show     || 'before';
+}
+
+// ─── SIDEBAR NAV ───
+function showPage(name, el) {
+  document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  if (el) el.classList.add('active');
+  document.getElementById('page-' + name).classList.add('active');
+  currentPage = name;
+  if (name === 'preview') loadPreview();
+  if (name === 'activity') loadLog();
+  if (name === 'dashboard') updateDashboard();
+}
+
+// ─── AFF TABS ───
+function buildAffTabs() {
+  const tabsEl = document.getElementById('affTabs');
+  tabsEl.innerHTML = '';
+  Object.keys(PAGES).forEach(key => {
+    const div = document.createElement('div');
+    div.className = 'page-tab' + (key === activeAffPage ? ' active' : '');
+    div.textContent = PAGES[key].label;
+    div.onclick = () => {
+      document.querySelectorAll('.page-tab').forEach(t=>t.classList.remove('active'));
+      div.classList.add('active');
+      activeAffPage = key;
+      buildAffContent(key);
+    };
+    tabsEl.appendChild(div);
+  });
+}
+
+function buildAffContent(pageKey) {
+  const content = document.getElementById('affContent');
+  const page = PAGES[pageKey];
+  content.innerHTML = `
+    <div class="section-card">
+      <div class="section-card-title">${page.label}</div>
+      <div class="section-card-sub">// paste affiliate URL for each tool — will appear before download/convert button</div>
+      <div class="tool-aff-list" id="toolList-${pageKey}"></div>
+      <div class="mt-16">
+        <button class="btn btn-primary" onclick="savePageLinks('${pageKey}')">💾 Save ${page.label} Links</button>
+      </div>
+    </div>`;
+
+  const list = document.getElementById('toolList-' + pageKey);
+  page.tools.forEach(tool => {
+    const key = pageKey + '/' + tool;
+    const val = affData[key] || '';
+    const item = document.createElement('div');
+    item.className = 'tool-aff-item';
+    item.innerHTML = `
+      <div class="tool-aff-name">${tool}</div>
+      <input class="tool-aff-input ${val ? 'has-link':''}" type="url" 
+        id="aff-${CSS.escape(key)}" 
+        data-key="${key}"
+        placeholder="https://affiliate-link.com/..." 
+        value="${val}"
+        oninput="onAffInput(this)">
+      <div class="link-status ${val?'live':'empty'}" id="status-${CSS.escape(key)}">${val?'● LIVE':'○ empty'}</div>`;
+    list.appendChild(item);
+  });
+}
+
+function onAffInput(el) {
+  const statusEl = document.getElementById('status-' + CSS.escape(el.dataset.key));
+  if (el.value.trim()) {
+    el.classList.add('has-link');
+    statusEl.textContent = '● LIVE'; statusEl.className = 'link-status live';
+  } else {
+    el.classList.remove('has-link');
+    statusEl.textContent = '○ empty'; statusEl.className = 'link-status empty';
   }
 }
 
-function loadData(){
-  if(!db)return;
-  db.collection('settings').doc('appSettings').get().then(d=>{
-    if(d.exists){
-      const a = d.data().affiliate||{};
-      document.getElementById('affPdf').value=a.pdf||'';
-      document.getElementById('affImg').value=a.image||'';
-      document.getElementById('affBiz').value=a.business||'';
-      document.getElementById('affGen').value=a.general||'';
-      document.getElementById('analytics').value=d.data().analytics||'';
-    }
+async function savePageLinks(pageKey) {
+  const page = PAGES[pageKey];
+  const updates = {};
+  page.tools.forEach(tool => {
+    const key = pageKey + '/' + tool;
+    const el = document.querySelector(`[data-key="${key}"]`);
+    const val = el ? el.value.trim() : '';
+    affData[key] = val;
+    updates['affiliateLinks/' + key] = val || null;
   });
-  loadMsgs();
-  loadLogs();
+  await db.ref().update(updates);
+  addLog('info', `Saved affiliate links for: ${page.label}`);
+  updateStats();
+  showToast('✅ Links saved for ' + page.label);
 }
 
-function save(){
-  if(!db)return alert('Firebase not connected!');
-  const aff={
-    pdf:document.getElementById('affPdf').value,
-    image:document.getElementById('affImg').value,
-    business:document.getElementById('affBiz').value,
-    general:document.getElementById('affGen').value
+// ─── BANNERS ───
+function buildBannerForm() {
+  const form = document.getElementById('bannerForm');
+  form.innerHTML = '';
+  Object.keys(PAGES).forEach(key => {
+    const page = PAGES[key];
+    const ban = bannerData[key] || {};
+    const row = document.createElement('div');
+    row.className = 'banner-row';
+    row.innerHTML = `
+      <div class="banner-label">${page.label}</div>
+      <input class="banner-input ${ban.url?'has-link':''}" type="text"
+        id="ban-text-${key}" placeholder="Banner text (e.g. 🎁 Special Offer!)"
+        value="${ban.text||''}">
+      <input class="banner-input ${ban.url?'has-link':''}" type="url"
+        id="ban-url-${key}" placeholder="https://affiliate-url.com/..."
+        value="${ban.url||''}"
+        style="flex:2">`;
+    form.appendChild(row);
+  });
+}
+
+async function saveBanners() {
+  const updates = {};
+  Object.keys(PAGES).forEach(key => {
+    const text = document.getElementById('ban-text-' + key)?.value.trim() || '';
+    const url  = document.getElementById('ban-url-' + key)?.value.trim()  || '';
+    bannerData[key] = { text, url };
+    updates['pageBanners/' + key] = { text: text || null, url: url || null };
+  });
+  await db.ref().update(updates);
+  addLog('success', 'Updated all page banners');
+  showToast('✅ All banners saved!');
+}
+
+// ─── SETTINGS ───
+async function saveSettings() {
+  settings = {
+    btnText:  document.getElementById('settingBtnText').value.trim() || '🎁 Claim Offer – Click Here',
+    btnColor: document.getElementById('settingBtnColor').value,
+    show:     document.getElementById('settingShow').value,
   };
-  db.collection('settings').doc('appSettings').set({affiliate:aff,updated:new Date().toISOString()},{merge:true})
-  .then(()=>{
-    document.getElementById('ok').textContent='✓ Saved to Firebase!';
-    document.getElementById('ok').style.display='block';
-    addLog('SETTINGS', 'Affiliate links saved');
-  }).catch(e=>alert('Error: '+e));
+  await db.ref('adminSettings').set(settings);
+  addLog('info', 'Updated global settings');
+  showToast('✅ Settings saved!');
 }
 
-function saveAnalytics(){
-  if(!db)return;
-  db.collection('settings').doc('appSettings').set({analytics:document.getElementById('analytics').value},{merge:true})
-  .then(()=>{alert('✓ Saved!'); addLog('SETTINGS', 'Analytics saved');})
-  .catch(e=>alert('Error: '+e));
+// ─── CLEAR ALL ───
+async function clearAllLinks() {
+  if (!confirm('⚠️ This will PERMANENTLY delete ALL affiliate links. Are you sure?')) return;
+  await db.ref('affiliateLinks').remove();
+  affData = {};
+  buildAffContent(activeAffPage);
+  updateStats();
+  addLog('info', 'Cleared ALL affiliate links');
+  showToast('🗑️ All links cleared', true);
 }
 
-function loadMsgs(){
-  if(!db)return;
-  db.collection('messages').orderBy('createdAt','desc').limit(10).get().then(s=>{
-    let h='';
-    s.forEach(d=>{
-      const m=d.data();
-      const date=m.createdAt?new Date(m.createdAt.seconds*1000).toLocaleDateString():'';
-      h+=`<div style="padding:10px;background:#334155;margin:4px 0;border-radius:6px"><b>${m.name||'Anon'}</b> <small>${date}</small><br>${m.message||''}</div>`;
+// ─── PREVIEW ───
+async function loadPreview() {
+  const snap = await db.ref('affiliateLinks').once('value');
+  affData = snap.val() || {};
+  const grid = document.getElementById('previewGrid');
+  grid.innerHTML = '';
+  let count = 0;
+  Object.keys(PAGES).forEach(pageKey => {
+    PAGES[pageKey].tools.forEach(tool => {
+      const key = pageKey + '/' + tool;
+      const val = affData[key];
+      count++;
+      const card = document.createElement('div');
+      card.className = 'preview-card';
+      card.innerHTML = `
+        <div class="preview-badge ${val?'live':'empty'}"></div>
+        <div class="preview-page">${PAGES[pageKey].label}</div>
+        <div class="preview-tool">${tool}</div>
+        ${val ? `<div class="preview-link"><a href="${val}" target="_blank" style="color:var(--accent3)">${val.length>50?val.slice(0,50)+'…':val}</a></div>`
+              : `<div class="preview-no-link">No affiliate link set</div>`}`;
+      grid.appendChild(card);
     });
-    document.getElementById('msgs').innerHTML=h||'<p style="color:#94a3b8">No messages</p>';
+  });
+  updateStats();
+}
+
+// ─── DASHBOARD ───
+function updateDashboard() {
+  updateStats();
+  buildCoverage();
+}
+
+function updateStats() {
+  let total = 0, live = 0;
+  Object.keys(PAGES).forEach(p => {
+    PAGES[p].tools.forEach(t => {
+      total++;
+      const key = p + '/' + t;
+      if (affData[key]) live++;
+    });
+  });
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-live').textContent  = live;
+  document.getElementById('stat-empty').textContent = total - live;
+  document.getElementById('liveCount').textContent  = live;
+}
+
+function buildCoverage() {
+  const el = document.getElementById('coverageList');
+  if (!el) return;
+  el.innerHTML = '';
+  Object.keys(PAGES).forEach(key => {
+    const tools = PAGES[key].tools;
+    const live  = tools.filter(t => affData[key + '/' + t]).length;
+    const pct   = Math.round((live / tools.length) * 100);
+    const color = pct === 100 ? 'var(--accent3)' : pct > 50 ? 'var(--warn)' : 'var(--danger)';
+    el.innerHTML += `
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="min-width:140px;font-size:0.85rem;font-weight:600;">${PAGES[key].label}</div>
+        <div style="flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden;">
+          <div style="height:100%;width:${pct}%;background:${color};border-radius:4px;transition:width 0.5s"></div>
+        </div>
+        <div style="min-width:60px;text-align:right;font-size:0.78rem;font-family:'JetBrains Mono',monospace;color:${color}">${live}/${tools.length}</div>
+      </div>`;
   });
 }
 
-function loadLogs(){
-  const logs=JSON.parse(localStorage.getItem('eds_logs')||'[]');
-  let h='';
-  logs.slice(0,10).forEach(l=>{
-    h+=`<div style="padding:6px;border-bottom:1px solid #334155;font-size:12px;color:#94a3b8"><b>${l.action}</b> - ${l.details}</div>`;
+// ─── LOG ───
+function addLog(type, msg) {
+  const entry = { type, msg, time: new Date().toLocaleTimeString() };
+  logEntries.unshift(entry);
+  if (logEntries.length > 50) logEntries.pop();
+  db.ref('adminLog').push({ ...entry, ts: Date.now() });
+}
+
+async function loadLog() {
+  const snap = await db.ref('adminLog').orderByChild('ts').limitToLast(30).once('value');
+  const list = document.getElementById('logList');
+  list.innerHTML = '';
+  if (!snap.exists()) { list.innerHTML = '<div style="color:var(--muted);font-size:0.85rem;">No activity yet.</div>'; return; }
+  const entries = [];
+  snap.forEach(c => entries.push(c.val()));
+  entries.reverse().forEach(e => {
+    const d = document.createElement('div');
+    d.className = 'log-item ' + (e.type || 'info');
+    d.innerHTML = `<span class="log-time">${e.time || '--:--'}</span><span>${e.msg}</span>`;
+    list.appendChild(d);
   });
-  document.getElementById('logs').innerHTML=h||'<p style="color:#94a3b8">No logs</p>';
 }
 
-function addLog(action, details){
-  const logs=JSON.parse(localStorage.getItem('eds_logs')||'[]');
-  logs.unshift({action,details,time:new Date().toISOString()});
-  if(logs.length>20)logs.pop();
-  localStorage.setItem('eds_logs',JSON.stringify(logs));
+async function clearLog() {
+  if (!confirm('Clear activity log?')) return;
+  await db.ref('adminLog').remove();
+  loadLog();
 }
 
-function logout(){
-  addLog('LOGOUT', 'Owner logged out');
-  location.reload();
+// ─── EXPORT ───
+function exportLinks() {
+  const data = { affiliateLinks: affData, pageBanners: bannerData, exportedAt: new Date().toISOString() };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type:'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'affiliate-links-export.json'; a.click();
+  showToast('📥 Export downloaded!');
 }
 
-console.log('Admin Panel Loaded');
+// ─── TOAST ───
+function showToast(msg, isError = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'show' + (isError ? ' error' : '');
+  setTimeout(() => t.className = '', 2800);
+}
 </script>
-  <script src="seo-enhancements.js"></script>
-  <script src="seo-advanced.js"></script>
-  <script src="seo-ultimate.js"></script>
-  <script src="seo-master-auto.js"></script>
 </body>
 </html>
